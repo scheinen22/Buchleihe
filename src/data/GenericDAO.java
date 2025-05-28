@@ -5,10 +5,10 @@ import java.util.List;
 import model.Buch;
 
 // Interface für das Data Access Objekt, Implementierung der CRUD Operationen
-public interface BuchDAO {
-    void save(Buch buch);
+public interface GenericDAO<T> {
+    void save(T object);
     Buch findById(int id);
-    void update(Buch buch);
-    void delete(Buch buch);
-    List<Buch> findAll();
+    void update(T object);
+    void delete(T object);
+    List<T> findAll();
 }

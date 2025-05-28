@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import exception.SQLAbfrageFehlgeschlagenException;
 import model.Buch;
 
-public class BuchDAOImpl implements BuchDAO {
+public class BuchDAOImpl implements GenericDAO<Buch> {
     private DBConnect con;
 
     public BuchDAOImpl(DBConnect dbConnect) {
