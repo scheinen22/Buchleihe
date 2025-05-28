@@ -18,4 +18,7 @@ public class View {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextBoolean();
     }
+    private View() {
+        throw new IllegalStateException("Utility class");
+    }
 }
