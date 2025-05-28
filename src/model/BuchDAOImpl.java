@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-
+import org.jetbrains.annotations.Nullable;
 import data.BuchDAO;
 import data.DBConnect;
 import exception.SQLAbfrageFehlgeschlagenException;
@@ -36,6 +36,7 @@ public class BuchDAOImpl implements BuchDAO {
         }
     }
     @Override
+    @Nullable
     public Buch findById(int id) {
         try (Connection con = DBConnect.getConnection()) {
             String sql = "SELECT * FROM Buch WHERE id = ?";
