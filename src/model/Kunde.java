@@ -1,3 +1,5 @@
+package model;
+
 public class Kunde {
     private String name;
     private String surname;
@@ -9,7 +11,7 @@ public class Kunde {
         this.customerId = customerId;
     }
 
-    // Nutzer kann ein Buch zur Neubeschaffung vorschlagen
-    // -> Mitarbeiter entscheidet anschließend, ob das Buch neu beschafft wird
+    // Nutzer kann ein model.Buch zur Neubeschaffung vorschlagen
+    // -> Mitarbeiter entscheidet anschließend, ob das model.Buch neu beschafft wird
     // Nutzer erhält Information in allen fällen, was das Ergebnis der Anforderung sein wird
 }

@@ -1,12 +1,15 @@
+package data;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBConnect {
     private static final String DB_URL = "jdbc:mariadb://localhost:3306/";
-    private String user = "root";
-    private String password = "";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
     private String dbname;
     private String statement;
 
@@ -35,6 +38,9 @@ public class DBConnect {
             System.out.println("Failed to connect to database");
         }
     }
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(DB_URL, USER, PASSWORD);
+    }
     public String getStatement() {
         return statement;
     }
@@ -45,10 +51,10 @@ public class DBConnect {
         return DB_URL;
     }
     public String getUser() {
-        return user;
+        return USER;
     }
     public String getPassword() {
-        return password;
+        return PASSWORD;
     }
     public String getDbname() {
         return dbname;
