@@ -1,6 +1,8 @@
+package controller;
+
 import data.DBConnect;
 
-public class Main {
+public class Controller {
     public static void main(String[] args) {
         DBConnect dbConnect = new DBConnect();
     }
