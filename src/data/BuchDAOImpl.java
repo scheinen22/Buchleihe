@@ -1,4 +1,4 @@
-package model;
+package data;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,9 +8,9 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import data.BuchDAO;
-import data.DBConnect;
+
 import exception.SQLAbfrageFehlgeschlagenException;
+import model.Buch;
 
 public class BuchDAOImpl implements BuchDAO {
     private DBConnect con;

@@ -1,7 +1,7 @@
 package exception;
 
 public class SQLAbfrageFehlgeschlagenException extends RuntimeException {
-    public SQLAbfrageFehlgeschlagenException(Exception message) {
-        super(message);
+    public SQLAbfrageFehlgeschlagenException(Throwable cause) {
+        super("SQL-Abfrage fehlgeschlagen", cause);
     }
 }
