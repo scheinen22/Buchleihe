@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,15 +14,15 @@ import org.jetbrains.annotations.Nullable;
 import exception.SQLAbfrageFehlgeschlagenException;
 import model.Buch;
 
-public class BuchDAOImpl implements GenericDAO<Buch> {
-    private DBConnect con;
+public class BuchDAO implements GenericDAO<Buch> {
 
-    public BuchDAOImpl(DBConnect dbConnect) {
-        this.con = dbConnect;
+    public BuchDAO() {
+
     }
 
     @Override
     public void save(@NotNull Buch buch) {
+        Objects.requireNonNull(buch, "Buch darf nicht null sein");
         try (Connection con = DBConnect.getConnection()) {
             String sql = "INSERT INTO Buch (titel, author, bookId, available, rentingStatus) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement stmt = con.prepareStatement(sql)) { // Bietet mehr Sicherheit, leichter zu verstehen
@@ -59,16 +61,48 @@ public class BuchDAOImpl implements GenericDAO<Buch> {
         return null;
     }
     @Override
-    public void update(Buch buch) {
-
+    public void update(@NotNull Buch buch) {
+        Objects.requireNonNull(buch, "Buch darf nicht null sein");
+        String sql = "UPDATE Buch SET titel = ?, author = ?, available = ?, rentingStatus = ? WHERE id = ?";
+        try (Connection con = DBConnect.getConnection(); PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, buch.getTitel());
+            stmt.setString(2, buch.getAuthor());
+            stmt.setBoolean(3, buch.isAvailable());
+            stmt.setBoolean(4, buch.isRentingStatus());
+            stmt.setInt(5, buch.getBookId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLAbfrageFehlgeschlagenException(e);
+        }
     }
     @Override
-    public void delete(Buch buch) {
-
+    public void delete(@NotNull Buch buch) {
+        Objects.requireNonNull(buch, "Buch darf nicht null sein");
+        String sql = "DELETE FROM Buch WHERE id = ?";
+        try (Connection con = DBConnect.getConnection(); PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, buch.getBookId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLAbfrageFehlgeschlagenException(e);
+        }
     }
     @Override
-    public List<Buch> findAll() {
+    public List<Buch> getAll() {
+        List<Buch> buecherListe = new ArrayList<>();
         String sql = "SELECT * FROM Buch";
-        return null;
+        try (Connection con = DBConnect.getConnection(); PreparedStatement stmt = con.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String titel = rs.getString("titel");
+                String author = rs.getString("author");
+                boolean available = rs.getBoolean("available");
+                boolean rentingStatus = rs.getBoolean("rentingStatus");
+                Buch buch = new Buch(titel, author, id, available, rentingStatus);
+                buecherListe.add(buch);
+            }
+        } catch (SQLException e) {
+            throw new SQLAbfrageFehlgeschlagenException(e);
+        }
+        return buecherListe;
     }
 }

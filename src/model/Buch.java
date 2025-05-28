@@ -8,11 +8,11 @@ public class Buch {
     private boolean rentingStatus;
 
     public Buch(String titel, String author, int bookId, boolean available, boolean rentingStatus) {
-        this.titel = titel;
-        this.author = author;
-        this.bookId = bookId;
-        this.available = true;
-        this.rentingStatus = false;
+        setTitel(titel);
+        setAuthor(author);
+        setBookId(bookId);
+        setAvailable(available);
+        setRentingStatus(rentingStatus);
     }
 
     public int getBookId() {
