@@ -1,6 +1,7 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLOutput;
 import java.sql.Statement;
 
 public class DBConnect {
@@ -18,7 +19,14 @@ public class DBConnect {
             Statement stmt = con.createStatement();
             stmt.execute("USE" + " " + this.getDB_NAME());
             ResultSet rs = stmt.executeQuery(this.getStatement());
-            String ergebnis = rs.getString("ergebnis");
+            String ergebnis = "";
+            while (rs.next()) {
+                ergebnis = ergebnis.concat(rs.getString(1) + ",");
+            }
+            System.out.println(ergebnis);
+            rs.close();
+            stmt.close();
+            con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
