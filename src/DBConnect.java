@@ -5,8 +5,8 @@ import java.sql.Statement;
 
 public class DBConnect {
     private static final String DB_URL = "jdbc:mariadb://localhost:3306/";
-    private String USER = "root";
-    private String PASSWORD = "";
+    private String user = "root";
+    private String password = "";
     private String dbname;
     private String statement;
 
@@ -15,22 +15,21 @@ public class DBConnect {
         this.setDname(dbname);
         try {
             Class.forName("org.mariadb.jdbc.Driver");
-            Connection con = DriverManager.getConnection(this.getDB_URL(), this.getUSER(), this.getPASSWORD());
-            /*
-            Statement stmt = con.createStatement();
-            stmt.execute("USE" + " " + this.getDbname());
-            ResultSet rs = stmt.executeQuery(this.getStatement());
-            String ergebnis = "";
-            while (rs.next()) {
-                ergebnis = ergebnis.concat(rs.getString(1) + ",");
-            }
-            System.out.println(ergebnis);
-            rs.close();
-            stmt.close();
-
-             */
+            Connection con = DriverManager.getConnection(this.getDB_URL(), this.getUser(), this.getPassword());
+            fuehreStatementAus(con);
             System.out.println("Connected to the database successfully");
             con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to connect to database");
+        }
+    }
+    public DBConnect() {
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+            try (Connection con = DriverManager.getConnection(this.getDB_URL(), this.getUser(), this.getPassword())) {
+                System.out.println("Connected to the database successfully");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Failed to connect to database");
@@ -45,16 +44,30 @@ public class DBConnect {
     public String getDB_URL() {
         return DB_URL;
     }
-    public String getUSER() {
-        return USER;
+    public String getUser() {
+        return user;
     }
-    public String getPASSWORD() {
-        return PASSWORD;
+    public String getPassword() {
+        return password;
     }
     public String getDbname() {
         return dbname;
     }
     public void setDname(String dname) {
         this.dbname = dname;
+    }
+    private void fuehreStatementAus(Connection con) {
+        try (con; Statement stmt = con.createStatement()) {
+            stmt.execute("USE" + " " + this.getDbname());
+            String ergebnis = "";
+            ResultSet rs = stmt.executeQuery(this.getStatement());
+            while (rs.next()) {
+                ergebnis = ergebnis.concat(rs.getString(1) + ",");
+            }
+            System.out.println(ergebnis);
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
