@@ -3,23 +3,24 @@ package data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import view.View;
-
+@SuppressWarnings({"java:S2115"}) // Passwort ist nicht nötig bei der Projektgröße
 public class DBConnect {
-    private static final String DB_URL = "jdbc:mariadb://localhost:3306/";
+    private static final String DB_URL = "jdbc:mariadb://localhost:3306/Test";
     private static final String USER = "root";
     private static final String PASSWORD = "";
+    private static final Logger LOGGER = Logger.getLogger(DBConnect.class.getName());
 
     public DBConnect() {
         try {
             Class.forName("org.mariadb.jdbc.Driver");
             try (Connection con = DriverManager.getConnection(this.getDBURL(), this.getUser(), this.getPassword())) {
-                View.ausgabe("Connected to the database successfully");
+                LOGGER.info("Connected to the database successfully");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            View.ausgabe("Failed to connect to database");
+            LOGGER.log(Level.SEVERE, "Fehler beim Verbinden zur Datenbank", e);
         }
     }
     public static Connection getConnection() throws SQLException {
