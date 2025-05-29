@@ -12,6 +12,11 @@ public class View {
     public static String eingabe() {
         return scanner.nextLine();
     }
+    public static String eingabe(String text) {
+        ausgabe(text);
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
     public static int eingabeInt() {
         while (true) {
             try {
