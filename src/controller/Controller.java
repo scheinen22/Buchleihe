@@ -7,7 +7,7 @@ import view.View;
 
 public class Controller {
     public static void main(String[] args) {
-        nutzererstellen(false);
+        nutzerErstellen(false);
         new Controller().start();
     }
     public void start() {
@@ -63,7 +63,7 @@ public class Controller {
         }
         System.out.println();
     }
-    private static void nutzererstellen(boolean wahl) {
+    private static void nutzerErstellen(boolean wahl) {
         if (wahl) {
             Nutzer nutzer = new Nutzer("ben", "johann", 1, "said", "123");
             NutzerDAO nutzerDAO = NutzerDAO.getInstance();
