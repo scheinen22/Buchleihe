@@ -2,6 +2,7 @@ package controller;
 
 import data.BuchDAO;
 import data.NutzerDAO;
+import exception.BuchBereitsVerliehenException;
 import exception.BuchNichtGefundenException;
 import model.Buch;
 import model.Nutzer;
@@ -35,14 +36,13 @@ public class Controller {
             View.ausgabe("1. Buch suchen");
             View.ausgabe("2. Buch ausleihen");
             View.ausgabe("3. Buch zurückgeben");
-            View.ausgabe("4. Fernleihe anfragen");
-            View.ausgabe("5. Buch zur Neubeschaffung vorschlagen");
-            View.ausgabe("6. Mein Profil anzeigen");
+            View.ausgabe("4. Buch zur Neubeschaffung vorschlagen");
+            View.ausgabe("5. Mein Profil anzeigen");
 
             if (nutzer.isMitarbeiter()) {
-                View.ausgabe("7. Vorschläge zur Neubeschaffung einsehen");
-                View.ausgabe("8. Buch als bestellt markieren");
-                View.ausgabe("9. Nutzer verwalten");
+                View.ausgabe("6. Vorschläge zur Neubeschaffung einsehen");
+                View.ausgabe("7. Buch als bestellt markieren");
+                View.ausgabe("8. Nutzer verwalten");
             }
 
             View.ausgabe("0. Abmelden");
@@ -53,24 +53,23 @@ public class Controller {
 
             switch (auswahl) {
                 case 1 -> buchSuchen(); // -> Infos abfragen, dann für die Logik und Zugriff auf die DAOs in die Services leiten
-                case 2 -> //ausleihen(nutzer);
+                case 2 -> ausleihen(nutzer);
                 case 3 -> buchZurueckgeben(nutzer);
-                case 4 -> fernleiheAnfragen(nutzer);
-                case 5 -> buchVorschlagen(nutzer);
-                case 6 -> profilAnzeigen(nutzer);
-                case 7 -> {
+                case 4 -> buchVorschlagen(nutzer);
+                case 5 -> profilAnzeigen(nutzer);
+                case 6 -> {
                     if (nutzer.isMitarbeiter()) {
                         vorschlaegeEinsehen();
                     }
                     else View.ausgabe("⛔ Zugriff verweigert.");
                 }
-                case 8 -> {
+                case 7 -> {
                     if (nutzer.isMitarbeiter()) {
                         buchBestellen();
                     }
                     else View.ausgabe("⛔ Zugriff verweigert.");
                 }
-                case 9 -> {
+                case 8 -> {
                     if (nutzer.isMitarbeiter()) {
                         nutzerVerwalten();
                     }
@@ -84,6 +83,34 @@ public class Controller {
             }
         }
     }
+
+    private void buchZurueckgeben(Nutzer nutzer) {
+        View.ausgabe("📖 Buchrückgabe");
+        pause(1000);
+        View.ausgabe("\"Bitte geben Sie die ISBN des Buchs ein: \"");
+        int isbn = View.eingabeInt();
+        try {
+            ausleiheService.rueckgabe(isbn, nutzer);
+            View.ausgabe("Das Buch wurde erfolgreich zurückgegeben.");
+        } catch (BuchNichtGefundenException | BuchBereitsVerliehenException e) {
+            View.ausgabe(e.getMessage());
+        }
+    }
+
+    private void ausleihen(Nutzer nutzer) {
+        View.ausgabe("📖 Buchausleihe");
+        pause(1000);
+        View.ausgabe("\"Bitte geben Sie die ISBN des Buchs ein: \"");
+        int isbn = View.eingabeInt();
+        try {
+            ausleiheService.ausleihen(isbn, nutzer);
+            View.ausgabe("Das Buch wurde erfolgreich ausgeliehen.");
+        } catch (BuchNichtGefundenException | BuchBereitsVerliehenException e) {
+            View.ausgabe(e.getMessage());
+        }
+
+    }
+
     private Nutzer login() {
         while (true) {
             View.ausgabe("\n🔐 Anmeldung erforderlich");

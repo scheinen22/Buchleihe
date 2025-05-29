@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+import model.Nutzer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,13 +32,14 @@ public class BuchDAO implements GenericDAO<Buch> {
     public void save(@NotNull Buch buch) {
         Objects.requireNonNull(buch, BUCH_NICHT_NULL);
         try (Connection con = DBConnect.getConnection()) {
-            String sql = "INSERT INTO Buch (titel, author, bookId, available, rentingStatus) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Buch (titel, author, bookId, available, rentingStatus, nutzerId) VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement stmt = con.prepareStatement(sql)) { // Bietet mehr Sicherheit, leichter zu verstehen
                 stmt.setString(1, buch.getTitel());
                 stmt.setString(2, buch.getAuthor());
                 stmt.setInt(3, buch.getBookId());
                 stmt.setBoolean(4, buch.isAvailable());
                 stmt.setBoolean(5, buch.isRentingStatus());
+                stmt.setInt(6, buch.getAusgeliehenAnNutzer().getCustomerId());
                 stmt.executeUpdate();
                 LOGGER.info("INSERT successful");
             }
@@ -59,7 +61,8 @@ public class BuchDAO implements GenericDAO<Buch> {
                         String author = rs.getString("author");
                         boolean available = rs.getBoolean("available");
                         boolean rentingStatus = rs.getBoolean("rentingStatus");
-                        return new Buch(titel, author, bookId, available, rentingStatus);
+                        Nutzer nutzer = NutzerDAO.getInstance().findById(rs.getInt("nutzerId"));
+                        return new Buch(titel, author, bookId, available, rentingStatus, nutzer);
                     }
                 }
             }
@@ -71,13 +74,14 @@ public class BuchDAO implements GenericDAO<Buch> {
     @Override
     public void update(@NotNull Buch buch) {
         Objects.requireNonNull(buch, BUCH_NICHT_NULL);
-        String sql = "UPDATE Buch SET titel = ?, author = ?, available = ?, rentingStatus = ? WHERE id = ?";
+        String sql = "UPDATE Buch SET titel = ?, author = ?, available = ?, rentingStatus = ?, nutzerId = ? WHERE id = ?";
         try (Connection con = DBConnect.getConnection(); PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, buch.getTitel());
             stmt.setString(2, buch.getAuthor());
             stmt.setBoolean(3, buch.isAvailable());
             stmt.setBoolean(4, buch.isRentingStatus());
             stmt.setInt(5, buch.getBookId());
+            stmt.setInt(6, buch.getAusgeliehenAnNutzer().getCustomerId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new SQLAbfrageFehlgeschlagenException(e);
@@ -105,7 +109,8 @@ public class BuchDAO implements GenericDAO<Buch> {
                 String author = rs.getString("author");
                 boolean available = rs.getBoolean("available");
                 boolean rentingStatus = rs.getBoolean("rentingStatus");
-                Buch buch = new Buch(titel, author, id, available, rentingStatus);
+                Nutzer nutzer = NutzerDAO.getInstance().findById(rs.getInt("nutzerId"));
+                Buch buch = new Buch(titel, author, id, available, rentingStatus, nutzer);
                 buecherListe.add(buch);
             }
         } catch (SQLException e) {

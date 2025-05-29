@@ -6,13 +6,23 @@ public class Buch {
     private int bookId;
     private boolean available;
     private boolean rentingStatus;
+    private Nutzer ausgeliehenAnNutzer;
 
-    public Buch(String titel, String author, int bookId, boolean available, boolean rentingStatus) {
+    public Buch(String titel, String author, int bookId, boolean available, boolean rentingStatus, Nutzer ausgeliehenAnNutzer) {
         setTitel(titel);
         setAuthor(author);
         setBookId(bookId);
         setAvailable(available);
         setRentingStatus(rentingStatus);
+        setAusgeliehenAnNutzer(ausgeliehenAnNutzer);
+    }
+
+    public Nutzer getAusgeliehenAnNutzer() {
+        return ausgeliehenAnNutzer;
+    }
+
+    public void setAusgeliehenAnNutzer(Nutzer ausgeliehenAnNutzer) {
+        this.ausgeliehenAnNutzer = ausgeliehenAnNutzer;
     }
 
     public int getBookId() {
