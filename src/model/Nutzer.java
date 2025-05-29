@@ -6,13 +6,15 @@ public class Nutzer {
     private int customerId;
     private String benutzername;
     private String passwort;
+    private boolean mitarbeiterStatus;
 
-    public Nutzer(String name, String surname, int customerId, String benutzername, String passwort) {
+    public Nutzer(String name, String surname, int customerId, String benutzername, String passwort, boolean mitarbeiterStatus) {
         setName(name);
         setSurname(surname);
         setCustomerId(customerId);
         setBenutzername(benutzername);
         setPasswort(passwort);
+        setMitarbeiterStatus(mitarbeiterStatus);
     }
     public Nutzer() {}
 
@@ -54,6 +56,13 @@ public class Nutzer {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+    public boolean isMitarbeiter() {
+        return mitarbeiterStatus;
+    }
+
+    public void setMitarbeiterStatus(boolean mitarbeiterStatus) {
+        this.mitarbeiterStatus = mitarbeiterStatus;
     }
 // Nutzer kann ein model.Buch zur Neubeschaffung vorschlagen
     // -> Mitarbeiter entscheidet anschließend, ob das model.Buch neu beschafft wird

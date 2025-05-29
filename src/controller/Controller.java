@@ -1,11 +1,17 @@
 package controller;
 
+import data.BuchDAO;
 import data.NutzerDAO;
+import exception.BuchNichtGefundenException;
+import model.Buch;
 import model.Nutzer;
+import service.AusleiheService;
 import service.AuthentifizierungService;
 import view.View;
 
 public class Controller {
+    private final AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance());
+
     public static void main(String[] args) {
         nutzerErstellen(false);
         new Controller().start();
@@ -20,8 +26,64 @@ public class Controller {
 
         Nutzer nutzer = login();
 
+        zeigeHauptmenue(nutzer);
     }
+    private void zeigeHauptmenue(Nutzer nutzer) {
+        while (true) {
+            View.ausgabe("\n📚 Hauptmenü");
+            View.ausgabe("------------------------");
+            View.ausgabe("1. Buch suchen");
+            View.ausgabe("2. Buch ausleihen");
+            View.ausgabe("3. Buch zurückgeben");
+            View.ausgabe("4. Fernleihe anfragen");
+            View.ausgabe("5. Buch zur Neubeschaffung vorschlagen");
+            View.ausgabe("6. Mein Profil anzeigen");
 
+            if (nutzer.isMitarbeiter()) {
+                View.ausgabe("7. Vorschläge zur Neubeschaffung einsehen");
+                View.ausgabe("8. Buch als bestellt markieren");
+                View.ausgabe("9. Nutzer verwalten");
+            }
+
+            View.ausgabe("0. Abmelden");
+            View.ausgabe("------------------------");
+            View.ausgabe("Bitte wählen Sie eine Option:");
+
+            int auswahl = View.eingabeInt();
+
+            switch (auswahl) {
+                case 1 -> buchSuchen(); // -> Infos abfragen, dann für die Logik und Zugriff auf die DAOs in die Services leiten
+                case 2 -> //ausleihen(nutzer);
+                case 3 -> buchZurueckgeben(nutzer);
+                case 4 -> fernleiheAnfragen(nutzer);
+                case 5 -> buchVorschlagen(nutzer);
+                case 6 -> profilAnzeigen(nutzer);
+                case 7 -> {
+                    if (nutzer.isMitarbeiter()) {
+                        vorschlaegeEinsehen();
+                    }
+                    else View.ausgabe("⛔ Zugriff verweigert.");
+                }
+                case 8 -> {
+                    if (nutzer.isMitarbeiter()) {
+                        buchBestellen();
+                    }
+                    else View.ausgabe("⛔ Zugriff verweigert.");
+                }
+                case 9 -> {
+                    if (nutzer.isMitarbeiter()) {
+                        nutzerVerwalten();
+                    }
+                    else View.ausgabe("⛔ Zugriff verweigert.");
+                }
+                case 0 -> {
+                    View.ausgabe("\n👋 Sie wurden abgemeldet.");
+                    return;
+                }
+                default -> View.ausgabe("⚠️ Ungültige Eingabe. Bitte erneut versuchen.");
+            }
+        }
+    }
     private Nutzer login() {
         while (true) {
             View.ausgabe("\n🔐 Anmeldung erforderlich");
@@ -42,6 +104,18 @@ public class Controller {
             } else {
                 View.ausgabe("❌ Login fehlgeschlagen. Benutzer nicht gefunden oder Passwort falsch.\n");
             }
+        }
+    }
+    private void buchSuchen() {
+        View.ausgabe("📖 Buchsuche");
+        pause(1000);
+        View.ausgabe("\"Bitte geben Sie die ISBN des Buchs ein: \"");
+        int isbn = View.eingabeInt();
+        try {
+            Buch buch = ausleiheService.sucheBuch(isbn);
+            View.ausgabe(buch.toString());
+        } catch (BuchNichtGefundenException e) {
+            View.ausgabe(e.getMessage());
         }
     }
     private void pause(int millis) {
@@ -65,9 +139,9 @@ public class Controller {
     }
     private static void nutzerErstellen(boolean wahl) {
         if (wahl) {
-            Nutzer nutzer = new Nutzer("ben", "johann", 1, "said", "123");
+            Nutzer nutzer = new Nutzer("ben", "johann", 1, "said", "123", true);
             NutzerDAO nutzerDAO = NutzerDAO.getInstance();
-            nutzerDAO.save(nutzer);
+            nutzerDAO.update(nutzer);
         }
     }
 }

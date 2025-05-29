@@ -54,6 +54,10 @@ public class Buch {
     public void setTitel(String titel) {
         this.titel = titel;
     }
+    @Override
+    public String toString() {
+        return "test";
+    }
 // model.Buch kann per Fernleihe beschafft werden
     // Es muss zwischen Fern- und Ortsleihe unterschieden werden
     // Wenn model.Buch neu beschafft wird, wird es im Katalog verzeichnet, als bestellt markiert und für den Kunden reserviert werden

@@ -52,7 +52,8 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
                     String surname = rs.getString("surname");
                     String benutzername = rs.getString("benutzername");
                     String passwort = rs.getString("passwort");
-                    return new Nutzer(name, surname, id, benutzername, passwort);
+                    boolean mitarbeiterstatus = rs.getBoolean("mitarbeiterstatus");
+                    return new Nutzer(name, surname, id, benutzername, passwort, mitarbeiterstatus);
                 }
             }
         } catch (SQLException e) {
@@ -72,7 +73,8 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
                     int id = rs.getInt("id");
                     String name = rs.getString("name");
                     String surname = rs.getString("surname");
-                    return new Nutzer(name, surname, id, benutzername, passwort);
+                    boolean mitarbeiterstatus = rs.getBoolean("mitarbeiterstatus");
+                    return new Nutzer(name, surname, id, benutzername, passwort, mitarbeiterstatus);
                 }
             }
         } catch (SQLException e) {
