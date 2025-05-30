@@ -34,7 +34,6 @@ public class AusleiheService {
     public void ausleihen(int id, Nutzer nutzer) throws BuchBereitsVerliehenException {
         Buch buch = sucheBuch(id);
         if (buch.isAvailable() && !buch.isRentingStatus()) {
-            VormerkerlisteDAO vormerkerlisteDAO = VormerkerlisteDAO.getInstance();
             List<Vormerkerliste> vormerker = vormerkerlisteDAO.findByBookIdSorted(buch.getBookId());
             if (!vormerker.isEmpty()) {
                 Vormerkerliste ersterEintrag = vormerker.getFirst();
