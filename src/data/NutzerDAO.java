@@ -28,7 +28,7 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
     @Override
     public void save(@NotNull Nutzer nutzer) {
         Objects.requireNonNull(nutzer, NUTZER_NICHT_NULL);
-        String sql = "INSERT INTO Nutzer (name, surname, id, benutzername, passwort) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Nutzer (name, surname, id, benutzername, passwort, mitarbeiterstatus) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection con = DBConnect.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, nutzer.getName());
@@ -36,6 +36,7 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
             stmt.setInt(3, nutzer.getCustomerId());
             stmt.setString(4, nutzer.getBenutzername());
             stmt.setString(5, nutzer.getPasswort());
+            stmt.setBoolean(6, nutzer.isMitarbeiter());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new SQLAbfrageFehlgeschlagenException(e);

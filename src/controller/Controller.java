@@ -13,6 +13,7 @@ import view.View;
 public class Controller {
 
     private final AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance(), VormerkerlisteDAO.getInstance());
+    private static final String UNGUELTIG_EINGABE = "⚠️ Ungültige Eingabe. Bitte erneut versuchen.";
 
     public static void main(String[] args) {
         nutzerErstellen(false);
@@ -38,17 +39,13 @@ public class Controller {
             pause(1500);
             View.ausgabe("\n📚 Hauptmenü");
             View.ausgabe("------------------------");
-            View.ausgabe("1. Buch suchen");
-            View.ausgabe("2. Buch ausleihen");
-            View.ausgabe("3. Buch zurückgeben");
-            View.ausgabe("4. Buch zur Neubeschaffung vorschlagen");
-            View.ausgabe("5. Mein Profil anzeigen");
+            View.ausgabe("1. Buch suchen"); // AusleiheService
+            View.ausgabe("2. Buch ausleihen"); // AusleiheService
+            View.ausgabe("3. Buch zurückgeben"); // AusleiheService
+            View.ausgabe("4. Buch zur Neubeschaffung vorschlagen"); // AusleiheService
+            View.ausgabe("5. Mein Profil anzeigen"); // NutzerService
 
-            if (nutzer.isMitarbeiter()) {
-                View.ausgabe("6. Vorschläge zur Neubeschaffung einsehen");
-                View.ausgabe("7. Buch als bestellt markieren");
-                View.ausgabe("8. Nutzer verwalten");
-            }
+            pruefeMitarbeiterStatus(nutzer);
 
             View.ausgabe("0. Abmelden");
             View.ausgabe("------------------------");
@@ -66,26 +63,34 @@ public class Controller {
                     if (nutzer.isMitarbeiter()) {
                         vorschlaegeEinsehen();
                     }
-                    else View.ausgabe("⛔ Zugriff verweigert.");
+                    else View.ausgabe(UNGUELTIG_EINGABE);
                 }
                 case 7 -> {
                     if (nutzer.isMitarbeiter()) {
                         buchBestellen();
                     }
-                    else View.ausgabe("⛔ Zugriff verweigert.");
+                    else View.ausgabe(UNGUELTIG_EINGABE);
                 }
                 case 8 -> {
                     if (nutzer.isMitarbeiter()) {
                         nutzerVerwalten();
                     }
-                    else View.ausgabe("⛔ Zugriff verweigert.");
+                    else View.ausgabe(UNGUELTIG_EINGABE);
                 }
                 case 0 -> {
                     View.ausgabe("\n👋 Sie wurden abgemeldet.");
                     return;
                 }
-                default -> View.ausgabe("⚠️ Ungültige Eingabe. Bitte erneut versuchen.");
+                default -> View.ausgabe(UNGUELTIG_EINGABE);
             }
+        }
+    }
+
+    private void pruefeMitarbeiterStatus(Nutzer nutzer) {
+        if (nutzer.isMitarbeiter()) {
+            View.ausgabe("6. Vorschläge zur Neubeschaffung einsehen"); // MitarbeiterService
+            View.ausgabe("7. Buch als bestellt markieren"); // MitarbeiterService
+            View.ausgabe("8. Nutzer verwalten"); // MitarbeiterService
         }
     }
 
@@ -196,9 +201,9 @@ public class Controller {
 
     private static void nutzerErstellen(boolean wahl) {
         if (wahl) {
-            Nutzer nutzer = new Nutzer("ben", "johann", 1, "said", "123", true);
+            Nutzer nutzer = new Nutzer("ben", "KEIN MITARBEITER", 2, "kmit", "123", false);
             NutzerDAO nutzerDAO = NutzerDAO.getInstance();
-            nutzerDAO.update(nutzer);
+            nutzerDAO.save(nutzer);
         }
     }
 }
