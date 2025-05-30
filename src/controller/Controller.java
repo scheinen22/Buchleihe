@@ -2,6 +2,7 @@ package controller;
 
 import data.BuchDAO;
 import data.NutzerDAO;
+import data.VormerkerlisteDAO;
 import exception.BuchBereitsVerliehenException;
 import exception.BuchNichtGefundenException;
 import model.Buch;
@@ -11,7 +12,7 @@ import service.AuthentifizierungService;
 import view.View;
 
 public class Controller {
-    private final AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance());
+    private final AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance(), VormerkerlisteDAO.getInstance());
 
     public static void main(String[] args) {
         nutzerErstellen(false);

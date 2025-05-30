@@ -59,14 +59,31 @@ public class VormerkerlisteDAO implements GenericDAO<Vormerkerliste> {
         return null;
     }
 
+    public boolean istSchonVorgemerkt(int buchId, int nutzerId) {
+        String sql = "SELECT COUNT(*) FROM Vormerkerliste WHERE buchId = ? AND nutzerId = ?";
+        try (Connection con = DBConnect.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, buchId);
+            stmt.setInt(2, nutzerId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLAbfrageFehlgeschlagenException(e);
+        }
+        return false;
+    }
+
     public List<Vormerkerliste> findByBookId(int id) {
         List<Vormerkerliste> vormerkerlisteListe = new ArrayList<>();
-        String sql = "SELECT * FROM Vormerkerliste WHERE bookId = ?";
+        String sql = "SELECT * FROM Vormerkerliste WHERE buchId = ?";
         try (Connection con = DBConnect.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
                     Nutzer nutzer = NutzerDAO.getInstance().findById(rs.getInt("nutzerId"));
                     Buch buch = BuchDAO.getInstance().findById(rs.getInt("buchId"));
                     Vormerkerliste vormerkerliste = new Vormerkerliste(nutzer, buch, rs.getDate("eintrittsDatum"));
@@ -80,16 +97,14 @@ public class VormerkerlisteDAO implements GenericDAO<Vormerkerliste> {
     }
 
     @Override
-    public void update(@NotNull Vormerkerliste entity) {
-        Objects.requireNonNull(nutzer, VORMERKERLISTE_NICHT_NULL);
-        String sql = "UPDATE Nutzer SET name = ?, surname = ?, benutzername = ?, passwort = ? WHERE id = ?";
+    public void update(@NotNull Vormerkerliste vormerkerliste) {
+        Objects.requireNonNull(vormerkerliste, VORMERKERLISTE_NICHT_NULL);
+        String sql = "UPDATE Vormerkerliste SET eintrittsDatum = ? WHERE nutzerId = ? AND buchId = ?";
         try (Connection con = DBConnect.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setString(1, nutzer.getName());
-            stmt.setString(2, nutzer.getSurname());
-            stmt.setString(3, nutzer.getBenutzername());
-            stmt.setString(4, nutzer.getPasswort());
-            stmt.setInt(5, nutzer.getCustomerId());
+            stmt.setDate(1, vormerkerliste.getEintrittsDatum());
+            stmt.setInt(2, vormerkerliste.getNutzer().getCustomerId());
+            stmt.setInt(3, vormerkerliste.getBuch().getBookId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new SQLAbfrageFehlgeschlagenException(e);
@@ -97,12 +112,13 @@ public class VormerkerlisteDAO implements GenericDAO<Vormerkerliste> {
     }
 
     @Override
-    public void delete(@NotNull Vormerkerliste entity) {
-        Objects.requireNonNull(nutzer, VORMERKERLISTE_NICHT_NULL);
-        String sql = "DELETE FROM Nutzer WHERE id = ?";
+    public void delete(@NotNull Vormerkerliste vormerkerliste) {
+        Objects.requireNonNull(vormerkerliste, VORMERKERLISTE_NICHT_NULL);
+        String sql = "DELETE FROM Vormerkerliste WHERE nutzerId = ? AND buchId = ?";
         try (Connection con = DBConnect.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setInt(1, nutzer.getCustomerId());
+            stmt.setInt(1, vormerkerliste.getNutzer().getCustomerId());
+            stmt.setInt(2, vormerkerliste.getBuch().getBookId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new SQLAbfrageFehlgeschlagenException(e);
@@ -111,22 +127,20 @@ public class VormerkerlisteDAO implements GenericDAO<Vormerkerliste> {
 
     @Override
     public List<Vormerkerliste> getAll() {
-        List<Buch> buecherListe = new ArrayList<>();
-        String sql = "SELECT * FROM Buch";
-        try (Connection con = DBConnect.getConnection(); PreparedStatement stmt = con.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+        List<Vormerkerliste> vormerkerlisteListe = new ArrayList<>();
+        String sql = "SELECT * FROM Vormerkerliste";
+        try (Connection con = DBConnect.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String titel = rs.getString("titel");
-                String author = rs.getString("author");
-                boolean available = rs.getBoolean("available");
-                boolean rentingStatus = rs.getBoolean("rentingStatus");
                 Nutzer nutzer = NutzerDAO.getInstance().findById(rs.getInt("nutzerId"));
-                Buch buch = new Buch(titel, author, id, available, rentingStatus, nutzer);
-                buecherListe.add(buch);
+                Buch buch = BuchDAO.getInstance().findById(rs.getInt("buchId"));
+                Vormerkerliste vormerkerliste = new Vormerkerliste(nutzer, buch, rs.getDate("eintrittsDatum"));
+                vormerkerlisteListe.add(vormerkerliste);
             }
         } catch (SQLException e) {
             throw new SQLAbfrageFehlgeschlagenException(e);
         }
-        return buecherListe;
+        return vormerkerlisteListe;
     }
 }
