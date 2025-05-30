@@ -80,8 +80,12 @@ public class BuchDAO implements GenericDAO<Buch> {
             stmt.setString(2, buch.getAuthor());
             stmt.setBoolean(3, buch.isAvailable());
             stmt.setBoolean(4, buch.isRentingStatus());
-            stmt.setInt(5, buch.getBookId());
-            stmt.setInt(6, buch.getAusgeliehenAnNutzer().getCustomerId());
+            if (buch.getAusgeliehenAnNutzer() != null) {
+                stmt.setInt(5, buch.getAusgeliehenAnNutzer().getCustomerId());
+            } else {
+                stmt.setNull(5, java.sql.Types.INTEGER);
+            }
+            stmt.setInt(6, buch.getBookId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new SQLAbfrageFehlgeschlagenException(e);

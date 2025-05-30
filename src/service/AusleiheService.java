@@ -65,12 +65,16 @@ public class AusleiheService {
     public void rueckgabe(int id, Nutzer nutzer) throws BuchBereitsVerliehenException {
         Buch buch = sucheBuch(id);
         if (buch.isRentingStatus() && !buch.isAvailable()) {
-            buch.setAusgeliehenAnNutzer(null);
-            buch.setAvailable(true);
-            buch.setRentingStatus(false);
-            buchDAO.update(buch);
-        } else {
-            throw new BuchBereitsVerliehenException("Das Buch ist bereits verliehen!");
+            Nutzer aktuellerAusleiher = buch.getAusgeliehenAnNutzer();
+            if (aktuellerAusleiher != null && aktuellerAusleiher.getCustomerId() == nutzer.getCustomerId()) {
+                buch.setAusgeliehenAnNutzer(null);
+                buch.setAvailable(true);
+                buch.setRentingStatus(false);
+                buchDAO.update(buch);
+            } else {
+                throw new BuchBereitsVerliehenException("❌ Sie können dieses Buch nicht zurückgeben." +
+                        " Es ist nicht verliehen oder Sie haben es nicht ausgeliehen.");
+            }
         }
     }
 }
