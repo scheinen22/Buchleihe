@@ -189,12 +189,8 @@ public class Controller {
     private void ladeAnimation(String message) {
         View.ausgabe(message);
         for (int i = 0; i < 3; i++) {
-            try {
-                Thread.sleep(500);
-                System.out.print(".");
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+            pause(500);
+            System.out.print(".");
         }
         System.out.println();
     }
