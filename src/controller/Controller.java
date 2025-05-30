@@ -84,7 +84,6 @@ public class Controller {
             }
         }
     }
-
     private void buchZurueckgeben(Nutzer nutzer) {
         View.ausgabe("📖 Buchrückgabe");
         pause(1000);
@@ -97,7 +96,6 @@ public class Controller {
             View.ausgabe(e.getMessage());
         }
     }
-
     private void ausleihen(Nutzer nutzer) {
         View.ausgabe("📖 Buchausleihe");
         pause(1000);
@@ -105,13 +103,11 @@ public class Controller {
         int isbn = View.eingabeInt();
         try {
             ausleiheService.ausleihen(isbn, nutzer);
-            View.ausgabe("Das Buch wurde erfolgreich ausgeliehen.");
+            View.ausgabe("✅ Das Buch wurde erfolgreich ausgeliehen.");
         } catch (BuchNichtGefundenException | BuchBereitsVerliehenException e) {
             View.ausgabe(e.getMessage());
         }
-
     }
-
     private Nutzer login() {
         while (true) {
             View.ausgabe("\n🔐 Anmeldung erforderlich");

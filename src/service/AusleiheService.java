@@ -2,6 +2,7 @@ package service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 
 import data.BuchDAO;
 import data.VormerkerlisteDAO;
@@ -33,6 +34,15 @@ public class AusleiheService {
     public void ausleihen(int id, Nutzer nutzer) throws BuchBereitsVerliehenException {
         Buch buch = sucheBuch(id);
         if (buch.isAvailable() && !buch.isRentingStatus()) {
+            VormerkerlisteDAO vormerkerlisteDAO = VormerkerlisteDAO.getInstance();
+            List<Vormerkerliste> vormerker = vormerkerlisteDAO.findByBookIdSorted(buch.getBookId());
+            if (!vormerker.isEmpty()) {
+                Vormerkerliste ersterEintrag = vormerker.getFirst();
+                if (ersterEintrag.getNutzer().getCustomerId() != nutzer.getCustomerId()) {
+                    throw new BuchBereitsVerliehenException("❌ Das Buch ist vorgemerkt. Sie sind nicht an erster Stelle.");
+                }
+                vormerkerlisteDAO.delete(ersterEintrag);
+            }
             buch.setAusgeliehenAnNutzer(nutzer);
             buch.setAvailable(false);
             buch.setRentingStatus(true);

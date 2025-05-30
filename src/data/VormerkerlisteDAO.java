@@ -96,6 +96,26 @@ public class VormerkerlisteDAO implements GenericDAO<Vormerkerliste> {
         return vormerkerlisteListe;
     }
 
+    public List<Vormerkerliste> findByBookIdSorted(int buchId) {
+        List<Vormerkerliste> liste = new ArrayList<>();
+        String sql = "SELECT * FROM Vormerkerliste WHERE buchId = ? ORDER BY eintrittsDatum ASC";
+        try (Connection con = DBConnect.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, buchId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Nutzer nutzer = NutzerDAO.getInstance().findById(rs.getInt("nutzerId"));
+                    Buch buch = BuchDAO.getInstance().findById(rs.getInt("buchId"));
+                    Vormerkerliste eintrag = new Vormerkerliste(nutzer, buch, rs.getDate("eintrittsDatum"));
+                    liste.add(eintrag);
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLAbfrageFehlgeschlagenException(e);
+        }
+        return liste;
+    }
+
     @Override
     public void update(@NotNull Vormerkerliste vormerkerliste) {
         Objects.requireNonNull(vormerkerliste, VORMERKERLISTE_NICHT_NULL);
