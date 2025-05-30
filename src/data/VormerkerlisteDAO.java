@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class VormerkerlisteDAO implements GenericDAO<Vormerkerliste> {
+
     private static final VormerkerlisteDAO INSTANCE = new VormerkerlisteDAO();
     private static final String VORMERKERLISTE_NICHT_NULL = "Vormerkerliste darf nicht null sein";
 

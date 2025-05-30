@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 @SuppressWarnings("java:S2115") // Passwort ist nicht nötig bei der Projektgröße
 public class DBConnect {
+
     private static final String DB_URL = "jdbc:mariadb://localhost:3306/Test";
     private static final String USER = "root";
     private static final String PASSWORD = "";
@@ -23,15 +24,19 @@ public class DBConnect {
             LOGGER.log(Level.SEVERE, "Fehler beim Verbinden zur Datenbank", e);
         }
     }
+
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DB_URL, USER, PASSWORD);
     }
+
     public String getDBURL() {
         return DB_URL;
     }
+
     public String getUser() {
         return USER;
     }
+
     public String getPassword() {
         return PASSWORD;
     }

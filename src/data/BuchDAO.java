@@ -18,6 +18,7 @@ import model.Buch;
 
 @SuppressWarnings("java:S6548")
 public class BuchDAO implements GenericDAO<Buch> {
+
     private static final BuchDAO INSTANCE = new BuchDAO();
     private static final String BUCH_NICHT_NULL = "Buch darf nicht null sein.";
     private static final Logger LOGGER = Logger.getLogger(BuchDAO.class.getName());
@@ -47,6 +48,7 @@ public class BuchDAO implements GenericDAO<Buch> {
             throw new SQLAbfrageFehlgeschlagenException(e);
         }
     }
+
     @Override
     @Nullable
     public Buch findById(int id) {
@@ -71,6 +73,7 @@ public class BuchDAO implements GenericDAO<Buch> {
         }
         return null;
     }
+
     @Override
     public void update(@NotNull Buch buch) {
         Objects.requireNonNull(buch, BUCH_NICHT_NULL);
@@ -91,6 +94,7 @@ public class BuchDAO implements GenericDAO<Buch> {
             throw new SQLAbfrageFehlgeschlagenException(e);
         }
     }
+
     @Override
     public void delete(@NotNull Buch buch) {
         Objects.requireNonNull(buch, BUCH_NICHT_NULL);
@@ -102,6 +106,7 @@ public class BuchDAO implements GenericDAO<Buch> {
             throw new SQLAbfrageFehlgeschlagenException(e);
         }
     }
+
     @Override
     public List<Buch> getAll() {
         List<Buch> buecherListe = new ArrayList<>();

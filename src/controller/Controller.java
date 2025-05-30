@@ -11,12 +11,14 @@ import service.AuthentifizierungService;
 import view.View;
 
 public class Controller {
+
     private final AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance(), VormerkerlisteDAO.getInstance());
 
     public static void main(String[] args) {
         nutzerErstellen(false);
         new Controller().start();
     }
+
     public void start() {
         View.ausgabe("\n--------------------------------------------");
         View.ausgabe("Willkommen im Bibliotheksmanagement-System");
@@ -30,6 +32,7 @@ public class Controller {
 
         zeigeHauptmenue(nutzer);
     }
+
     private void zeigeHauptmenue(Nutzer nutzer) {
         while (true) {
             pause(1500);
@@ -85,21 +88,27 @@ public class Controller {
             }
         }
     }
+
     private void buchVorschlagen(Nutzer nutzer) {
         View.ausgabe("In Arbeit");
     }
+
     private void buchBestellen() {
         View.ausgabe("In Arbeit");
     }
+
     private void profilAnzeigen(Nutzer nutzer) {
         View.ausgabe("In Arbeit");
     }
+
     private void vorschlaegeEinsehen() {
         View.ausgabe("In Arbeit");
     }
+
     private void nutzerVerwalten() {
         View.ausgabe("In Arbeit");
     }
+
     private void buchZurueckgeben(Nutzer nutzer) {
         View.ausgabe("📖 Buchrückgabe");
         pause(1000);
@@ -112,6 +121,7 @@ public class Controller {
             View.ausgabe(e.getMessage());
         }
     }
+
     private void ausleihen(Nutzer nutzer) {
         View.ausgabe("📖 Buchausleihe");
         pause(1000);
@@ -124,6 +134,7 @@ public class Controller {
             View.ausgabe(e.getMessage());
         }
     }
+
     private Nutzer login() {
         while (true) {
             View.ausgabe("\n🔐 Anmeldung erforderlich");
@@ -146,6 +157,7 @@ public class Controller {
             }
         }
     }
+
     private void buchSuchen() {
         View.ausgabe("\n📖 Buchsuche");
         pause(500);
@@ -160,6 +172,7 @@ public class Controller {
         }
         View.pauseBisEnter();
     }
+
     private void pause(int millis) {
         try {
             Thread.sleep(millis);
@@ -167,6 +180,7 @@ public class Controller {
             Thread.currentThread().interrupt(); // gute Praxis
         }
     }
+
     private void ladeAnimation(String message) {
         View.ausgabe(message);
         for (int i = 0; i < 3; i++) {
@@ -179,6 +193,7 @@ public class Controller {
         }
         System.out.println();
     }
+
     private static void nutzerErstellen(boolean wahl) {
         if (wahl) {
             Nutzer nutzer = new Nutzer("ben", "johann", 1, "said", "123", true);

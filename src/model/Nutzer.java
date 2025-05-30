@@ -1,6 +1,7 @@
 package model;
 
 public class Nutzer {
+
     private String name;
     private String surname;
     private int customerId;
@@ -16,7 +17,6 @@ public class Nutzer {
         setPasswort(passwort);
         setMitarbeiterStatus(mitarbeiterStatus);
     }
-    public Nutzer() {}
 
     public String getName() {
         return name;
@@ -57,6 +57,7 @@ public class Nutzer {
     public void setSurname(String surname) {
         this.surname = surname;
     }
+
     public boolean isMitarbeiter() {
         return mitarbeiterStatus;
     }
@@ -64,7 +65,4 @@ public class Nutzer {
     public void setMitarbeiterStatus(boolean mitarbeiterStatus) {
         this.mitarbeiterStatus = mitarbeiterStatus;
     }
-// Nutzer kann ein model.Buch zur Neubeschaffung vorschlagen
-    // -> Mitarbeiter entscheidet anschließend, ob das model.Buch neu beschafft wird
-    // Nutzer erhält Information in allen fällen, was das Ergebnis der Anforderung sein wird
 }

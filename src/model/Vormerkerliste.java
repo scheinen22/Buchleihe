@@ -3,6 +3,7 @@ package model;
 import java.sql.Date;
 
 public class Vormerkerliste {
+
     private Nutzer nutzer;
     private Buch buch;
     private Date eintrittsDatum;
@@ -36,6 +37,4 @@ public class Vormerkerliste {
     public void setNutzer(Nutzer nutzer) {
         this.nutzer = nutzer;
     }
-
-
 }

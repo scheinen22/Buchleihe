@@ -15,8 +15,10 @@ import model.Nutzer;
 
 @SuppressWarnings("java:S6548")
 public class NutzerDAO implements GenericDAO<Nutzer> {
+
     private static final NutzerDAO INSTANCE = new NutzerDAO();
     private static final String NUTZER_NICHT_NULL = "Nutzer darf nicht null sein";
+
     public static NutzerDAO getInstance() {
         return INSTANCE;
     }
@@ -39,6 +41,7 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
             throw new SQLAbfrageFehlgeschlagenException(e);
         }
     }
+
     @Override
     @Nullable
     public Nutzer findById(int id) {
@@ -61,6 +64,7 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
         }
         return null;
     }
+
     @Nullable
     public Nutzer findByBenutzernameUndPasswort(String benutzername, String passwort) {
         String sql = "SELECT * FROM Nutzer WHERE benutzername = ? AND passwort = ?";
@@ -82,6 +86,7 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
         }
         return null;
     }
+
     @Override
     public void update(@NotNull Nutzer nutzer) { // Evtl. Mitarbeiter Logik einbauen?
         Objects.requireNonNull(nutzer, NUTZER_NICHT_NULL);
@@ -98,6 +103,7 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
             throw new SQLAbfrageFehlgeschlagenException(e);
         }
     }
+
     @Override
     public void delete(@NotNull Nutzer nutzer) { // Evtl. Mitarbeiter Logik einbauen?
         Objects.requireNonNull(nutzer, NUTZER_NICHT_NULL);
@@ -110,6 +116,7 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
             throw new SQLAbfrageFehlgeschlagenException(e);
         }
     }
+
     @Override
     public List<Nutzer> getAll() {
         throw new UnsupportedOperationException("getAll() wird für NutzerDAO nicht benötigt.");
