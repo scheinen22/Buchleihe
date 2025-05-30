@@ -71,9 +71,10 @@ public class AusleiheService {
                 buch.setRentingStatus(false);
                 buchDAO.update(buch);
             } else {
-                throw new CheckedException("❌ Sie können dieses Buch nicht zurückgeben." +
-                        " Es ist nicht verliehen oder Sie haben es nicht ausgeliehen.");
+                throw new CheckedException("❌ Sie können dieses Buch nicht zurückgeben. Sie haben es nicht ausgeliehen.");
             }
+        } else {
+            throw new CheckedException("❌ Sie können dieses Buch nicht zurückgeben. Es ist nicht verliehen");
         }
     }
 }

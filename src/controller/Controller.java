@@ -117,7 +117,7 @@ public class Controller {
     private void buchZurueckgeben(Nutzer nutzer) {
         View.ausgabe("📖 Buchrückgabe");
         pause(1000);
-        View.ausgabe("\"Bitte geben Sie die ISBN des Buchs ein: \"");
+        View.ausgabe("\nBitte geben Sie die ISBN des Buchs ein: ");
         int isbn = View.eingabeInt();
         try {
             ausleiheService.rueckgabe(isbn, nutzer);
