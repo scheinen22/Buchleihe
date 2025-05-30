@@ -19,11 +19,12 @@ public class Controller {
         new Controller().start();
     }
     public void start() {
-        View.ausgabe("--------------------------------------------");
+        View.ausgabe("\n--------------------------------------------");
         View.ausgabe("Willkommen im Bibliotheksmanagement-System");
         View.ausgabe("--------------------------------------------");
 
-        ladeAnimation("Initialisiere Login");
+        pause(500);
+        ladeAnimation("\nInitialisiere Login");
         pause(250);
 
         Nutzer nutzer = login();
@@ -32,6 +33,7 @@ public class Controller {
     }
     private void zeigeHauptmenue(Nutzer nutzer) {
         while (true) {
+            pause(1500);
             View.ausgabe("\n📚 Hauptmenü");
             View.ausgabe("------------------------");
             View.ausgabe("1. Buch suchen");
@@ -84,6 +86,21 @@ public class Controller {
             }
         }
     }
+    private void buchVorschlagen(Nutzer nutzer) {
+        View.ausgabe("In Arbeit");
+    }
+    private void buchBestellen() {
+        View.ausgabe("In Arbeit");
+    }
+    private void profilAnzeigen(Nutzer nutzer) {
+        View.ausgabe("In Arbeit");
+    }
+    private void vorschlaegeEinsehen() {
+        View.ausgabe("In Arbeit");
+    }
+    private void nutzerVerwalten() {
+        View.ausgabe("In Arbeit");
+    }
     private void buchZurueckgeben(Nutzer nutzer) {
         View.ausgabe("📖 Buchrückgabe");
         pause(1000);
@@ -99,11 +116,11 @@ public class Controller {
     private void ausleihen(Nutzer nutzer) {
         View.ausgabe("📖 Buchausleihe");
         pause(1000);
-        View.ausgabe("\"Bitte geben Sie die ISBN des Buchs ein: \"");
+        View.ausgabe("Bitte geben Sie die ISBN des Buchs ein: ");
         int isbn = View.eingabeInt();
         try {
             ausleiheService.ausleihen(isbn, nutzer);
-            View.ausgabe("✅ Das Buch wurde erfolgreich ausgeliehen.");
+            View.ausgabe("\n✅ Das Buch wurde erfolgreich ausgeliehen.");
         } catch (BuchNichtGefundenException | BuchBereitsVerliehenException e) {
             View.ausgabe(e.getMessage());
         }
@@ -131,16 +148,18 @@ public class Controller {
         }
     }
     private void buchSuchen() {
-        View.ausgabe("📖 Buchsuche");
-        pause(1000);
-        View.ausgabe("\"Bitte geben Sie die ISBN des Buchs ein: \"");
+        View.ausgabe("\n📖 Buchsuche");
+        pause(500);
+        View.ausgabe("Bitte geben Sie die ISBN des Buchs ein:");
         int isbn = View.eingabeInt();
         try {
             Buch buch = ausleiheService.sucheBuch(isbn);
-            View.ausgabe(buch.toString());
+            pause(500);
+            View.ausgabe(buch.toString()); // Schöne toString() bauen am Ende!!!
         } catch (BuchNichtGefundenException e) {
             View.ausgabe(e.getMessage());
         }
+        View.pauseBisEnter();
     }
     private void pause(int millis) {
         try {

@@ -34,6 +34,10 @@ public class View {
             ausgabe("Bitte 'true'/'false' oder 'ja'/'nein' eingeben: ");
         }
     }
+    public static void pauseBisEnter() {
+        System.out.print("\n🔁 Drücken Sie ENTER, um fortzufahren...");
+        scanner.nextLine();
+    }
     private View() {
         throw new IllegalStateException("Utility class");
     }

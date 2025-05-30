@@ -62,7 +62,6 @@ public class AusleiheService {
         View.ausgabe("📝 Sie wurden erfolgreich auf die Vormerkerliste gesetzt.");
     }
 
-
     public void rueckgabe(int id, Nutzer nutzer) throws BuchBereitsVerliehenException {
         Buch buch = sucheBuch(id);
         if (buch.isRentingStatus() && !buch.isAvailable()) {

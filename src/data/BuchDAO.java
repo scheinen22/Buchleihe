@@ -51,12 +51,12 @@ public class BuchDAO implements GenericDAO<Buch> {
     @Nullable
     public Buch findById(int id) {
         try (Connection con = DBConnect.getConnection()) {
-            String sql = "SELECT * FROM Buch WHERE id = ?";
+            String sql = "SELECT * FROM Buch WHERE bookId = ?";
             try (PreparedStatement stmt = con.prepareStatement(sql)) {
                 stmt.setInt(1, id);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        int bookId = rs.getInt("id");
+                        int bookId = rs.getInt("bookId");
                         String titel = rs.getString("titel");
                         String author = rs.getString("author");
                         boolean available = rs.getBoolean("available");
@@ -74,7 +74,7 @@ public class BuchDAO implements GenericDAO<Buch> {
     @Override
     public void update(@NotNull Buch buch) {
         Objects.requireNonNull(buch, BUCH_NICHT_NULL);
-        String sql = "UPDATE Buch SET titel = ?, author = ?, available = ?, rentingStatus = ?, nutzerId = ? WHERE id = ?";
+        String sql = "UPDATE Buch SET titel = ?, author = ?, available = ?, rentingStatus = ?, nutzerId = ? WHERE bookId = ?";
         try (Connection con = DBConnect.getConnection(); PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, buch.getTitel());
             stmt.setString(2, buch.getAuthor());
@@ -90,7 +90,7 @@ public class BuchDAO implements GenericDAO<Buch> {
     @Override
     public void delete(@NotNull Buch buch) {
         Objects.requireNonNull(buch, BUCH_NICHT_NULL);
-        String sql = "DELETE FROM Buch WHERE id = ?";
+        String sql = "DELETE FROM Buch WHERE bookId = ?";
         try (Connection con = DBConnect.getConnection(); PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setInt(1, buch.getBookId());
             stmt.executeUpdate();
@@ -104,7 +104,7 @@ public class BuchDAO implements GenericDAO<Buch> {
         String sql = "SELECT * FROM Buch";
         try (Connection con = DBConnect.getConnection(); PreparedStatement stmt = con.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                int id = rs.getInt("id");
+                int id = rs.getInt("bookId");
                 String titel = rs.getString("titel");
                 String author = rs.getString("author");
                 boolean available = rs.getBoolean("available");
