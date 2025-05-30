@@ -3,8 +3,7 @@ package controller;
 import data.BuchDAO;
 import data.NutzerDAO;
 import data.VormerkerlisteDAO;
-import exception.BuchBereitsVerliehenException;
-import exception.BuchNichtGefundenException;
+import exception.CheckedException;
 import model.Buch;
 import model.Nutzer;
 import service.AusleiheService;
@@ -109,7 +108,7 @@ public class Controller {
         try {
             ausleiheService.rueckgabe(isbn, nutzer);
             View.ausgabe("Das Buch wurde erfolgreich zurückgegeben.");
-        } catch (BuchNichtGefundenException | BuchBereitsVerliehenException e) {
+        } catch (CheckedException e) {
             View.ausgabe(e.getMessage());
         }
     }
@@ -121,7 +120,7 @@ public class Controller {
         try {
             ausleiheService.ausleihen(isbn, nutzer);
             View.ausgabe("\n✅ Das Buch wurde erfolgreich ausgeliehen.");
-        } catch (BuchNichtGefundenException | BuchBereitsVerliehenException e) {
+        } catch (CheckedException e) {
             View.ausgabe(e.getMessage());
         }
     }
@@ -156,7 +155,7 @@ public class Controller {
             Buch buch = ausleiheService.sucheBuch(isbn);
             pause(500);
             View.ausgabe(buch.toString()); // Schöne toString() bauen am Ende!!!
-        } catch (BuchNichtGefundenException e) {
+        } catch (CheckedException e) {
             View.ausgabe(e.getMessage());
         }
         View.pauseBisEnter();

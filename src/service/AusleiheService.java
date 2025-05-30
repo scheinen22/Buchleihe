@@ -6,8 +6,7 @@ import java.util.List;
 
 import data.BuchDAO;
 import data.VormerkerlisteDAO;
-import exception.BuchBereitsVerliehenException;
-import exception.BuchNichtGefundenException;
+import exception.CheckedException;
 import model.Buch;
 import model.Nutzer;
 import model.Vormerkerliste;
@@ -23,22 +22,22 @@ public class AusleiheService {
         this.vormerkerlisteDAO = vormerkerlisteDAO;
     }
 
-    public Buch sucheBuch(int id) {
+    public Buch sucheBuch(int id) throws CheckedException {
         Buch buch = buchDAO.findById(id);
         if (buch == null) {
-            throw new BuchNichtGefundenException("Kein Buch mit ID " + id + " gefunden.");
+            throw new CheckedException("Kein Buch mit ID " + id + " gefunden.");
         }
         return buch;
     }
 
-    public void ausleihen(int id, Nutzer nutzer) throws BuchBereitsVerliehenException {
+    public void ausleihen(int id, Nutzer nutzer) throws CheckedException {
         Buch buch = sucheBuch(id);
         if (buch.isAvailable() && !buch.isRentingStatus()) {
             List<Vormerkerliste> vormerker = vormerkerlisteDAO.findByBookIdSorted(buch.getBookId());
             if (!vormerker.isEmpty()) {
                 Vormerkerliste ersterEintrag = vormerker.getFirst();
                 if (ersterEintrag.getNutzer().getCustomerId() != nutzer.getCustomerId()) {
-                    throw new BuchBereitsVerliehenException("❌ Das Buch ist vorgemerkt. Sie sind nicht an erster Stelle.");
+                    throw new CheckedException("❌ Das Buch ist vorgemerkt. Sie sind nicht an erster Stelle.");
                 }
                 vormerkerlisteDAO.delete(ersterEintrag);
             }
@@ -48,7 +47,7 @@ public class AusleiheService {
             buchDAO.update(buch);
         } else {
             vormerken(nutzer, buch);
-            throw new BuchBereitsVerliehenException("Das Buch ist bereits verliehen!");
+            throw new CheckedException("Das Buch ist bereits verliehen!");
         }
     }
 
@@ -62,7 +61,7 @@ public class AusleiheService {
         View.ausgabe("📝 Sie wurden erfolgreich auf die Vormerkerliste gesetzt.");
     }
 
-    public void rueckgabe(int id, Nutzer nutzer) throws BuchBereitsVerliehenException {
+    public void rueckgabe(int id, Nutzer nutzer) throws CheckedException {
         Buch buch = sucheBuch(id);
         if (buch.isRentingStatus() && !buch.isAvailable()) {
             Nutzer aktuellerAusleiher = buch.getAusgeliehenAnNutzer();
@@ -72,7 +71,7 @@ public class AusleiheService {
                 buch.setRentingStatus(false);
                 buchDAO.update(buch);
             } else {
-                throw new BuchBereitsVerliehenException("❌ Sie können dieses Buch nicht zurückgeben." +
+                throw new CheckedException("❌ Sie können dieses Buch nicht zurückgeben." +
                         " Es ist nicht verliehen oder Sie haben es nicht ausgeliehen.");
             }
         }
