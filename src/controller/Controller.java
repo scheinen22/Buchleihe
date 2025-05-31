@@ -4,7 +4,6 @@ import data.BuchDAO;
 import data.NutzerDAO;
 import data.VormerkerlisteDAO;
 import exception.CheckedException;
-import exception.NutzerNichtGefundenException;
 import model.Buch;
 import model.Nutzer;
 import service.AusleiheService;
@@ -119,6 +118,8 @@ public class Controller {
         View.ausgabe("1. Alle Nutzer anzeigen");
         View.ausgabe("2. Nutzer löschen");
         View.ausgabe("3. Zurück zum Hauptmenü");
+        View.ausgabe("------------------------");
+        View.ausgabe("Bitte wählen Sie eine Option:");
 
         int auswahl = View.eingabeInt();
         switch (auswahl) {
@@ -139,7 +140,7 @@ public class Controller {
                 int id = View.eingabeInt();
                 try {
                     nutzerService.nutzerLoeschen(id);
-                } catch (NutzerNichtGefundenException e) {
+                } catch (CheckedException e) {
                     View.ausgabe(e.getMessage());
                 }
                 View.pauseBisEnter();

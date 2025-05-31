@@ -1,7 +1,7 @@
 package service;
 
 import data.NutzerDAO;
-import exception.NutzerNichtGefundenException;
+import exception.CheckedException;
 import model.Nutzer;
 import view.View;
 
@@ -23,13 +23,13 @@ public class NutzerService {
         return nutzerDAO.getAll();
     }
 
-    public void nutzerLoeschen(int id) throws NutzerNichtGefundenException {
+    public void nutzerLoeschen(int id) throws CheckedException {
         Nutzer nutzer = nutzerDAO.findById(id);
-        if (nutzer != null) {
+        if (nutzer != null && nutzer.getCustomerId() == id) {
             nutzerDAO.delete(nutzer);
             View.ausgabe("Nutzer wurde gelöscht!");
         } else {
-            View.ausgabe("Nutzer existiert nicht.");
+            throw new CheckedException("Nutzer existiert nicht.");
         }
     }
 }
