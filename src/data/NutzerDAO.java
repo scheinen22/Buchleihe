@@ -4,9 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import model.Buch;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -120,6 +122,24 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
 
     @Override
     public List<Nutzer> getAll() {
-        throw new UnsupportedOperationException("getAll() wird für NutzerDAO nicht benötigt.");
+        List<Nutzer> nutzerListe = new ArrayList<>();
+        String sql = "SELECT * FROM Nutzer";
+        try (Connection con = DBConnect.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String surname = rs.getString("surname");
+                String benutzername = rs.getString("benutzername");
+                String passwort = rs.getString("passwort");
+                boolean mitarbeiterstatus = rs.getBoolean("mitarbeiterstatus");
+                Nutzer nutzer = new Nutzer(name, surname, id, benutzername, passwort, mitarbeiterstatus);
+                nutzerListe.add(nutzer);
+            }
+        } catch (SQLException e) {
+            throw new SQLAbfrageFehlgeschlagenException(e);
+        }
+        return nutzerListe;
     }
 }

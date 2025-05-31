@@ -4,11 +4,14 @@ import data.BuchDAO;
 import data.NutzerDAO;
 import data.VormerkerlisteDAO;
 import exception.CheckedException;
+import exception.NutzerNichtGefundenException;
 import model.Buch;
 import model.Nutzer;
 import service.AusleiheService;
 import service.NutzerService;
 import view.View;
+
+import java.util.List;
 
 public class Controller {
 
@@ -74,7 +77,7 @@ public class Controller {
                 }
                 case 8 -> {
                     if (nutzer.isMitarbeiter()) {
-                        nutzerVerwalten();
+                        nutzerVerwalten(nutzer);
                     }
                     else View.ausgabe(UNGUELTIG_EINGABE);
                 }
@@ -111,8 +114,39 @@ public class Controller {
         View.ausgabe("In Arbeit");
     }
 
-    private void nutzerVerwalten() {
-        View.ausgabe("In Arbeit");
+    private void nutzerVerwalten(Nutzer nutzer) {
+        View.ausgabe("\n👤 Nutzerverwaltung");
+        View.ausgabe("1. Alle Nutzer anzeigen");
+        View.ausgabe("2. Nutzer löschen");
+        View.ausgabe("3. Zurück zum Hauptmenü");
+
+        int auswahl = View.eingabeInt();
+        switch (auswahl) {
+            case 1 -> {
+                List<Nutzer> nutzerList = nutzerService.alleNutzer();
+                if (nutzerList.isEmpty()) {
+                    View.ausgabe("Keine Nutzer gefunden.");
+                } else {
+                    View.ausgabe("Nutzerliste:");
+                    for (Nutzer n : nutzerList) {
+                        View.ausgabe(n.toString());
+                    }
+                }
+                View.pauseBisEnter();
+            }
+            case 2 -> {
+                View.ausgabe("Bitte geben Sie die ID des zu löschenden Nutzers an: ");
+                int id = View.eingabeInt();
+                try {
+                    nutzerService.nutzerLoeschen(id);
+                } catch (NutzerNichtGefundenException e) {
+                    View.ausgabe(e.getMessage());
+                }
+                View.pauseBisEnter();
+            }
+            case 3 -> View.ausgabe("Zurück zum Hauptmenü...");
+            default -> View.ausgabe(UNGUELTIG_EINGABE);
+        }
     }
 
     private void buchZurueckgeben(Nutzer nutzer) {

@@ -65,4 +65,11 @@ public class Nutzer {
     public void setMitarbeiterStatus(boolean mitarbeiterStatus) {
         this.mitarbeiterStatus = mitarbeiterStatus;
     }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + " \nNachname:" + surname + "\nKunden ID:" + customerId + "\nBenutzername: "
+                + benutzername + "\n----------------------";
+    }
+
 }
