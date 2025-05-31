@@ -32,4 +32,11 @@ public class NutzerService {
             throw new CheckedException("Nutzer existiert nicht.");
         }
     }
+
+    public void profilAnzeigen(Nutzer nutzer) throws CheckedException {
+        int id = nutzer.getCustomerId();
+        if (nutzer != null && nutzer.getCustomerId() == id) {
+            View.ausgabe(nutzer.toString());
+        }
+    }
 }

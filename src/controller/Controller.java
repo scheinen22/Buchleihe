@@ -106,7 +106,13 @@ public class Controller {
     }
 
     private void profilAnzeigen(Nutzer nutzer) {
-        View.ausgabe("In Arbeit");
+        try {
+            View.ausgabe("\nIhr Profil: ");
+            nutzerService.profilAnzeigen(nutzer);
+            View.pauseBisEnter();
+        } catch (CheckedException e) {
+            View.ausgabe(e.getMessage());
+        }
     }
 
     private void vorschlaegeEinsehen() {
