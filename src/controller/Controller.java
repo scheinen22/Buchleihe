@@ -7,12 +7,13 @@ import exception.CheckedException;
 import model.Buch;
 import model.Nutzer;
 import service.AusleiheService;
-import service.AuthentifizierungService;
+import service.NutzerService;
 import view.View;
 
 public class Controller {
 
     private final AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance(), VormerkerlisteDAO.getInstance());
+    private final NutzerService nutzerService = new NutzerService(NutzerDAO.getInstance());
     private static final String UNGUELTIG_EINGABE = "⚠️ Ungültige Eingabe. Bitte erneut versuchen.";
 
     public static void main(String[] args) {
@@ -152,7 +153,7 @@ public class Controller {
                 continue;
             }
 
-            Nutzer nutzer = AuthentifizierungService.authentifizieren(benutzername, passwort);
+            Nutzer nutzer = nutzerService.authentifizieren(benutzername, passwort);
 
             if (nutzer != null) {
                 View.ausgabe("\n✅ Login erfolgreich. Willkommen, " + nutzer.getName() + " " + nutzer.getSurname() + "!");

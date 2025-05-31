@@ -39,6 +39,7 @@ public class AusleiheService {
                 if (ersterEintrag.getNutzer().getCustomerId() != nutzer.getCustomerId()) {
                     throw new CheckedException("❌ Das Buch ist vorgemerkt. Sie sind nicht an erster Stelle.");
                 }
+                View.ausgabe("🔁 Sie wurden aus der Vormerkerliste entfernt.");
                 vormerkerlisteDAO.delete(ersterEintrag);
             }
             buch.setAusgeliehenAnNutzer(nutzer);
@@ -47,7 +48,7 @@ public class AusleiheService {
             buchDAO.update(buch);
         } else {
             vormerken(nutzer, buch);
-            throw new CheckedException("Das Buch ist bereits verliehen!");
+            throw new CheckedException("❌ Das Buch ist bereits verliehen!");
         }
     }
 
