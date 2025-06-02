@@ -42,15 +42,15 @@ public class Controller {
             pause(1500);
             View.ausgabe("\n📚 Hauptmenü");
             View.ausgabe("------------------------");
-            View.ausgabe("1. Buch suchen"); // AusleiheService
-            View.ausgabe("2. Buch ausleihen"); // AusleiheService
-            View.ausgabe("3. Buch zurückgeben"); // AusleiheService
+            View.ausgabe("1. Buch suchen"); // AusleiheService // fertig
+            View.ausgabe("2. Buch ausleihen"); // AusleiheService // fertig
+            View.ausgabe("3. Buch zurückgeben"); // AusleiheService // fertig
             View.ausgabe("4. Buch zur Neubeschaffung vorschlagen"); // AusleiheService
-            View.ausgabe("5. Mein Profil anzeigen"); // NutzerService
+            View.ausgabe("5. Mein Profil anzeigen"); // NutzerService // fertig
 
             pruefeMitarbeiterStatus(nutzer);
 
-            View.ausgabe("0. Abmelden");
+            View.ausgabe("0. Abmelden"); //fertig
             View.ausgabe("------------------------");
             View.ausgabe("Bitte wählen Sie eine Option:");
 
@@ -91,9 +91,9 @@ public class Controller {
 
     private void pruefeMitarbeiterStatus(Nutzer nutzer) {
         if (nutzer.isMitarbeiter()) {
-            View.ausgabe("6. Vorschläge zur Neubeschaffung einsehen"); // MitarbeiterService
-            View.ausgabe("7. Buch als bestellt markieren"); // MitarbeiterService
-            View.ausgabe("8. Nutzer verwalten"); // MitarbeiterService
+            View.ausgabe("6. Vorschläge zur Neubeschaffung einsehen"); // MitarbeiterService // nicht fertig
+            View.ausgabe("7. Buch als bestellt markieren"); // MitarbeiterService // nicht fertig
+            View.ausgabe("8. Nutzer verwalten"); // MitarbeiterService // fertig
         }
     }
 
@@ -106,13 +106,9 @@ public class Controller {
     }
 
     private void profilAnzeigen(Nutzer nutzer) {
-        try {
-            View.ausgabe("\nIhr Profil: ");
-            nutzerService.profilAnzeigen(nutzer);
-            View.pauseBisEnter();
-        } catch (CheckedException e) {
-            View.ausgabe(e.getMessage());
-        }
+        View.ausgabe("\nIhr Profil: ");
+        nutzerService.profilAnzeigen(nutzer);
+        View.pauseBisEnter();
     }
 
     private void vorschlaegeEinsehen() {
@@ -237,6 +233,7 @@ public class Controller {
         System.out.println();
     }
 
+    // Methode zum schnellen Anlegen von Testnutzern, wird später gelöscht
     private static void nutzerErstellen(boolean wahl) {
         if (wahl) {
             Nutzer nutzer = new Nutzer("ben", "KEIN MITARBEITER", 2, "kmit", "123", false);

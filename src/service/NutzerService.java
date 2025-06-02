@@ -33,7 +33,7 @@ public class NutzerService {
         }
     }
 
-    public void profilAnzeigen(Nutzer nutzer) throws CheckedException {
-            View.ausgabe(nutzer.toString());
+    public void profilAnzeigen(Nutzer nutzer) {
+        View.ausgabe(nutzer.toString());
     }
 }
