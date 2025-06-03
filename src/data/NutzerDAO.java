@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import model.Buch;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,12 +53,7 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    String name = rs.getString("name");
-                    String surname = rs.getString("surname");
-                    String benutzername = rs.getString("benutzername");
-                    String passwort = rs.getString("passwort");
-                    boolean mitarbeiterstatus = rs.getBoolean("mitarbeiterstatus");
-                    return new Nutzer(name, surname, id, benutzername, passwort, mitarbeiterstatus);
+                    return extractNutzer(rs);
                 }
             }
         } catch (SQLException e) {
@@ -77,11 +71,7 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
             stmt.setString(2, passwort);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    int id = rs.getInt("id");
-                    String name = rs.getString("name");
-                    String surname = rs.getString("surname");
-                    boolean mitarbeiterstatus = rs.getBoolean("mitarbeiterstatus");
-                    return new Nutzer(name, surname, id, benutzername, passwort, mitarbeiterstatus);
+                    return extractNutzer(rs);
                 }
             }
         } catch (SQLException e) {
@@ -128,18 +118,21 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
              PreparedStatement stmt = con.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                String surname = rs.getString("surname");
-                String benutzername = rs.getString("benutzername");
-                String passwort = rs.getString("passwort");
-                boolean mitarbeiterstatus = rs.getBoolean("mitarbeiterstatus");
-                Nutzer nutzer = new Nutzer(name, surname, id, benutzername, passwort, mitarbeiterstatus);
-                nutzerListe.add(nutzer);
+                nutzerListe.add(extractNutzer(rs));
             }
         } catch (SQLException e) {
             throw new SQLAbfrageFehlgeschlagenException(e);
         }
         return nutzerListe;
+    }
+
+    private Nutzer extractNutzer(ResultSet rs) throws SQLException {
+        int id = rs.getInt("id");
+        String name = rs.getString("name");
+        String surname = rs.getString("surname");
+        String benutzername = rs.getString("benutzername");
+        String passwort = rs.getString("passwort");
+        boolean mitarbeiterstatus = rs.getBoolean("mitarbeiterstatus");
+        return new Nutzer(name, surname, id, benutzername, passwort, mitarbeiterstatus);
     }
 }

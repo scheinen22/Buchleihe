@@ -3,11 +3,14 @@ package controller;
 import data.BuchDAO;
 import data.NutzerDAO;
 import data.VormerkerlisteDAO;
+import data.VorschlagDAO;
 import exception.CheckedException;
 import model.Buch;
 import model.Nutzer;
+import model.Vorschlag;
 import service.AusleiheService;
 import service.NutzerService;
+import service.VorschlagService;
 import view.View;
 
 import java.util.List;
@@ -16,6 +19,7 @@ public class Controller {
 
     private final AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance(), VormerkerlisteDAO.getInstance());
     private final NutzerService nutzerService = new NutzerService(NutzerDAO.getInstance());
+    private final VorschlagService vorschlagsService = new VorschlagService(VorschlagDAO.getInstance());
     private static final String UNGUELTIG_EINGABE = "⚠️ Ungültige Eingabe. Bitte erneut versuchen.";
 
     public static void main(String[] args) {
@@ -98,11 +102,33 @@ public class Controller {
     }
 
     private void buchVorschlagen(Nutzer nutzer) {
-        View.ausgabe("In Arbeit");
+        View.ausgabe("\n📚 Buchvorschlag für Neubeschaffung");
+
+        String titel = View.eingabe("Buchtitel: ");
+        String autor = View.eingabe("Autor: ");
+
+        if (titel.isBlank() || autor.isBlank()) {
+            View.ausgabe("⚠️ Titel und Autor dürfen nicht leer sein.");
+            return;
+        }
+
+        vorschlagsService.buchVorschlagen(titel, autor, nutzer);
+        View.ausgabe("✅ Buchvorschlag wurde gespeichert. Vielen Dank!");
+        View.pauseBisEnter();
     }
 
     private void buchBestellen() {
-        View.ausgabe("In Arbeit");
+        View.ausgabe("\n📦 Vorschlag als bestellt markieren");
+        View.ausgabe("Bitte geben Sie die ID des Vorschlags ein:");
+        int id = View.eingabeInt();
+        try {
+            vorschlagsService.alsBestelltMarkieren(id);
+            View.ausgabe("✅ Vorschlag wurde als bestellt markiert.");
+        } catch (CheckedException e) {
+            View.ausgabe(e.getMessage());
+        }
+
+        View.pauseBisEnter();
     }
 
     private void profilAnzeigen(Nutzer nutzer) {
@@ -112,8 +138,19 @@ public class Controller {
     }
 
     private void vorschlaegeEinsehen() {
-        View.ausgabe("In Arbeit");
+        View.ausgabe("\n📬 Vorschläge zur Neubeschaffung:");
+
+        List<Vorschlag> liste = vorschlagsService.alleVorschlaege();
+        if (liste.isEmpty()) {
+            View.ausgabe("Keine Vorschläge vorhanden.");
+            } else {
+                for (Vorschlag v : liste) {
+                    View.ausgabe(v.toString());
+                }
+            }
+            View.pauseBisEnter();
     }
+
 
     private void nutzerVerwalten(Nutzer nutzer) {
         View.ausgabe("\n👤 Nutzerverwaltung");
@@ -190,7 +227,7 @@ public class Controller {
                 continue;
             }
 
-            Nutzer nutzer = nutzerService.authentifizieren(benutzername, passwort);
+            Nutzer nutzer = nutzerService.authentifizieren(benutzername, passwort); // Schauen, ob in der DB Benutzernamen doppelt vorkommen können
 
             if (nutzer != null) {
                 View.ausgabe("\n✅ Login erfolgreich. Willkommen, " + nutzer.getName() + " " + nutzer.getSurname() + "!");
