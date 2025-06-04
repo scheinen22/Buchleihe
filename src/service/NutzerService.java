@@ -6,6 +6,7 @@ import model.Nutzer;
 import view.View;
 
 import java.util.List;
+import java.util.Objects;
 
 public class NutzerService {
 
@@ -34,6 +35,7 @@ public class NutzerService {
     }
 
     public void profilAnzeigen(Nutzer nutzer) {
+        Objects.requireNonNull(nutzer);
         View.ausgabe(nutzer.toString());
     }
 }

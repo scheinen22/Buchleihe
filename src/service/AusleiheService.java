@@ -3,6 +3,7 @@ package service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import data.BuchDAO;
 import data.VormerkerlisteDAO;
@@ -31,6 +32,7 @@ public class AusleiheService {
     }
 
     public void ausleihen(int id, Nutzer nutzer) throws CheckedException {
+        Objects.requireNonNull(nutzer);
         Buch buch = sucheBuch(id);
         if (buch.isAvailable() && !buch.isRentingStatus()) {
             List<Vormerkerliste> vormerker = vormerkerlisteDAO.findByBookIdSorted(buch.getBookId());
@@ -63,6 +65,7 @@ public class AusleiheService {
     }
 
     public void rueckgabe(int id, Nutzer nutzer) throws CheckedException {
+        Objects.requireNonNull(nutzer);
         Buch buch = sucheBuch(id);
         if (buch.isRentingStatus() && !buch.isAvailable()) {
             Nutzer aktuellerAusleiher = buch.getAusgeliehenAnNutzer();

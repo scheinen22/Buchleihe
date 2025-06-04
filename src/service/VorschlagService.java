@@ -7,6 +7,7 @@ import model.Vorschlag;
 import model.VorschlagsStatus;
 
 import java.util.List;
+import java.util.Objects;
 
 public class VorschlagService {
 
@@ -17,6 +18,7 @@ public class VorschlagService {
     }
 
     public void buchVorschlagen(String titel, String autor, Nutzer nutzer) {
+        Objects.requireNonNull(nutzer);
         Vorschlag vorschlag = new Vorschlag(0, titel, autor, VorschlagsStatus.OFFEN, nutzer, false);
         vorschlagDAO.save(vorschlag);
     }
@@ -25,8 +27,9 @@ public class VorschlagService {
         return vorschlagDAO.getAll();
     }
 
-    public List<Vorschlag> nichtBenachrichtigteVorschlaege() {
-        return vorschlagDAO.findNichtBenachrichtigte();
+    public List<Vorschlag> nichtBenachrichtigteNutzer(Nutzer nutzer) {
+        Objects.requireNonNull(nutzer);
+        return vorschlagDAO.findNichtBenachrichtigte(nutzer.getCustomerId());
     }
 
     public void alsBestelltMarkieren(int id) throws CheckedException {
@@ -34,16 +37,15 @@ public class VorschlagService {
         if (vorschlag == null) {
             throw new CheckedException("❌ Vorschlag mit ID " + id + " nicht gefunden.");
         }
-
         if (vorschlag.getStatus() == VorschlagsStatus.BESTELLT) {
             throw new CheckedException("⚠️ Vorschlag ist bereits als bestellt markiert.");
         }
-
         vorschlag.setStatus(VorschlagsStatus.BESTELLT);
         vorschlagDAO.update(vorschlag);
     }
 
     public void benachrichtigen(Vorschlag vorschlag) {
+        Objects.requireNonNull(vorschlag);
         vorschlag.setBenachrichtigt(true);
         vorschlagDAO.update(vorschlag);
     }
@@ -53,7 +55,6 @@ public class VorschlagService {
         if (vorschlag == null) {
             throw new CheckedException("❌ Vorschlag mit ID " + id + " nicht gefunden.");
         }
-
         vorschlag.setStatus(VorschlagsStatus.ABGELEHNT);
         vorschlagDAO.update(vorschlag);
     }

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +30,7 @@ public class VorschlagDAO implements GenericDAO<Vorschlag> {
 
     @Override
     public void save(@NotNull Vorschlag v) {
+        Objects.requireNonNull(v, VORSCHLAG_NICHT_NULL);
         String sql = "INSERT INTO Vorschlag (buchTitel, autor, status, nutzerId, benachrichtigt) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = DBConnect.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -61,6 +63,7 @@ public class VorschlagDAO implements GenericDAO<Vorschlag> {
 
     @Override
     public void update(@NotNull Vorschlag v) {
+        Objects.requireNonNull(v, VORSCHLAG_NICHT_NULL);
         String sql = "UPDATE Vorschlag SET buchTitel = ?, autor = ?, status = ?, nutzerId = ?, benachrichtigt = ? WHERE id = ?";
         try (Connection con = DBConnect.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -78,6 +81,7 @@ public class VorschlagDAO implements GenericDAO<Vorschlag> {
 
     @Override
     public void delete(@NotNull Vorschlag v) {
+        Objects.requireNonNull(v, VORSCHLAG_NICHT_NULL);
         String sql = "DELETE FROM Vorschlag WHERE id = ?";
         try (Connection con = DBConnect.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -104,12 +108,13 @@ public class VorschlagDAO implements GenericDAO<Vorschlag> {
         return list;
     }
 
-    public List<Vorschlag> findNichtBenachrichtigte() {
-        String sql = "SELECT * FROM Vorschlag WHERE benachrichtigt = FALSE AND status != 'OFFEN'";
+    public List<Vorschlag> findNichtBenachrichtigte(int id) {
+        String sql = "SELECT * FROM Vorschlag WHERE benachrichtigt = FALSE AND id = ?";
         List<Vorschlag> list = new ArrayList<>();
         try (Connection con = DBConnect.getConnection();
-             PreparedStatement stmt = con.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 list.add(extract(rs));
             }

@@ -1,6 +1,7 @@
 package model;
 
 public class Vorschlag {
+
     private int id;
     private String buchTitel;
     private String autor;
