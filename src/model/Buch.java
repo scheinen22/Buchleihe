@@ -8,14 +8,16 @@ public class Buch {
     private boolean available;
     private boolean rentingStatus;
     private Nutzer ausgeliehenAnNutzer;
+    private boolean fernleihe;
 
-    public Buch(String titel, String author, int bookId, boolean available, boolean rentingStatus, Nutzer ausgeliehenAnNutzer) {
+    public Buch(String titel, String author, int bookId, boolean available, boolean rentingStatus, Nutzer ausgeliehenAnNutzer, boolean fernleihe) {
         setTitel(titel);
         setAuthor(author);
         setBookId(bookId);
         setAvailable(available);
         setRentingStatus(rentingStatus);
         setAusgeliehenAnNutzer(ausgeliehenAnNutzer);
+        setFernleihe(fernleihe);
     }
 
     public Nutzer getAusgeliehenAnNutzer() {
@@ -66,6 +68,13 @@ public class Buch {
         this.titel = titel;
     }
 
+    public boolean isFernleihe() {
+        return fernleihe;
+    }
+
+    public void setFernleihe(boolean fernleihe) {
+        this.fernleihe = fernleihe;
+    }
     @Override
     public String toString() {
         return "test";

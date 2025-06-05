@@ -68,7 +68,7 @@ public class Nutzer {
 
     @Override
     public String toString() {
-        return "Name: " + name + " \nNachname:" + surname + "\nKunden ID:" + customerId + "\nBenutzername: "
+        return "----------------------\n" + "Name: " + name + " \nNachname:" + surname + "\nKunden ID:" + customerId + "\nBenutzername: "
                 + benutzername + "\n----------------------";
     }
 
