@@ -109,7 +109,7 @@ public class VorschlagDAO implements GenericDAO<Vorschlag> {
     }
 
     public List<Vorschlag> findNichtBenachrichtigte(int id) {
-        String sql = "SELECT * FROM Vorschlag WHERE benachrichtigt = FALSE AND id = ?";
+        String sql = "SELECT * FROM Vorschlag WHERE benachrichtigt = FALSE AND nutzerId = ?";
         List<Vorschlag> list = new ArrayList<>();
         try (Connection con = DBConnect.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
