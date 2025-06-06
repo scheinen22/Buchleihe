@@ -49,11 +49,12 @@ public class Controller {
             pause(1500);
             View.ausgabe("\n📚 Hauptmenü");
             View.ausgabe(TRENNLINIE);
-            View.ausgabe("1. Buch suchen"); // AusleiheService // fertig
-            View.ausgabe("2. Buch ausleihen"); // AusleiheService // FERNLEIHE einbauen
-            View.ausgabe("3. Buch zurückgeben");
-            View.ausgabe("4. Buch zur Neubeschaffung vorschlagen");
-            View.ausgabe("5. Mein Profil anzeigen");
+            View.ausgabe("1. Katalog ausgeben");
+            View.ausgabe("2. Buch suchen");// AusleiheService // fertig
+            View.ausgabe("3. Buch ausleihen"); // AusleiheService // FERNLEIHE einbauen
+            View.ausgabe("4. Buch zurückgeben");
+            View.ausgabe("5. Buch zur Neubeschaffung vorschlagen");
+            View.ausgabe("6. Mein Profil anzeigen");
 
             pruefeMitarbeiterStatus(nutzer);
 
@@ -64,18 +65,19 @@ public class Controller {
             int auswahl = View.eingabeInt();
 
             switch (auswahl) {
-                case 1 -> buchSuchen(); // -> Infos abfragen, dann für die Logik und Zugriff auf die DAOs in die Services leiten
-                case 2 -> ausleihen(nutzer);
-                case 3 -> buchZurueckgeben(nutzer);
-                case 4 -> buchVorschlagen(nutzer);
-                case 5 -> profilAnzeigen(nutzer);
-                case 6 -> {
+                case 1 -> katalogAnzeigen();
+                case 2 -> buchSuchen(); // -> Infos abfragen, dann für die Logik und Zugriff auf die DAOs in die Services leiten
+                case 3 -> ausleihen(nutzer);
+                case 4 -> buchZurueckgeben(nutzer);
+                case 5 -> buchVorschlagen(nutzer);
+                case 6 -> profilAnzeigen(nutzer);
+                case 7 -> {
                     if (nutzer.isMitarbeiter()) {
                         vorschlaegeVerwalten();
                     }
                     else View.ausgabe(UNGUELTIG_EINGABE);
                 }
-                case 7 -> {
+                case 8 -> {
                     if (nutzer.isMitarbeiter()) {
                         nutzerVerwalten();
                     }
@@ -92,9 +94,19 @@ public class Controller {
 
     private void pruefeMitarbeiterStatus(Nutzer nutzer) {
         if (nutzer.isMitarbeiter()) {
-            View.ausgabe("6. Vorschläge verwalten");
-            View.ausgabe("7. Nutzer verwalten");
+            View.ausgabe("7. Vorschläge verwalten");
+            View.ausgabe("8. Nutzer verwalten");
         }
+    }
+
+    private void katalogAnzeigen() {
+        View.ausgabe("\n📚 Buchkatalog");
+        pause(500);
+        List<Buch> alleBuecher = ausleiheService.holeAlleBücher();
+        for (Buch buch : alleBuecher) {
+            View.ausgabe(buch.toString());
+        }
+        View.pauseBisEnter();
     }
 
     private void buchVorschlagen(Nutzer nutzer) {
@@ -118,94 +130,106 @@ public class Controller {
     }
 
     private void vorschlaegeVerwalten() {
-        pause(250);
-        View.ausgabe("\n📬 Vorschläge verwalten:");
-        View.ausgabe(TRENNLINIE);
-        View.ausgabe("1. Alle Vorschläge anzeigen");
-        View.ausgabe("2. Vorschlag akzeptieren / Buch bestellen");
-        View.ausgabe("3. Vorschlag ablehnen");
-        View.ausgabe("4. Zurück zum Hauptmenü");
-        View.ausgabe(TRENNLINIE);
-        View.ausgabe(WAEHLE_OPTION);
+        boolean zustand = true;
+        while (zustand) {
+            pause(250);
+            View.ausgabe("\n📬 Vorschläge verwalten:");
+            View.ausgabe(TRENNLINIE);
+            View.ausgabe("1. Alle Vorschläge anzeigen");
+            View.ausgabe("2. Vorschlag akzeptieren / Buch bestellen");
+            View.ausgabe("3. Vorschlag ablehnen");
+            View.ausgabe("4. Zurück zum Hauptmenü");
+            View.ausgabe(TRENNLINIE);
+            View.ausgabe(WAEHLE_OPTION);
 
-        int auswahl = View.eingabeInt();
-        switch (auswahl) {
-            case 1 -> {
-                List<Vorschlag> liste = vorschlagsService.alleVorschlaege();
-                if (liste.isEmpty()) {
-                    View.ausgabe("Keine Vorschläge vorhanden.");
-                } else {
-                    for (Vorschlag v : liste) {
-                        View.ausgabe(v.toString());
+            int auswahl = View.eingabeInt();
+            switch (auswahl) {
+                case 1 -> {
+                    List<Vorschlag> liste = vorschlagsService.alleVorschlaege();
+                    if (liste.isEmpty()) {
+                        View.ausgabe("Keine Vorschläge vorhanden.");
+                    } else {
+                        for (Vorschlag v : liste) {
+                            View.ausgabe(v.toString());
+                        }
                     }
+                    View.pauseBisEnter();
                 }
-                View.pauseBisEnter();
-            }
-            case 2 -> {
-                View.ausgabe("\n📦 Vorschlag akzeptieren");
-                View.ausgabe("Bitte geben Sie die ID des Vorschlags ein:");
-                int id = View.eingabeInt();
-                try {
-                    vorschlagsService.alsBestelltMarkieren(id);
-                    View.ausgabe("✅ Vorschlag wurde als bestellt markiert.");
-                } catch (CheckedException e) {
-                    View.ausgabe(e.getMessage());
+                case 2 -> {
+                    View.ausgabe("\n📦 Vorschlag akzeptieren");
+                    View.ausgabe("Bitte geben Sie die ID des Vorschlags ein:");
+                    int id = View.eingabeInt();
+                    try {
+                        vorschlagsService.alsBestelltMarkieren(id);
+                        View.ausgabe("✅ Vorschlag wurde als bestellt markiert.");
+                    } catch (CheckedException e) {
+                        View.ausgabe(e.getMessage());
+                    }
+                    View.pauseBisEnter();
                 }
-                View.pauseBisEnter();
-            }
-            case 3 -> {
-                View.ausgabe("\n📦 Vorschlag ablehnen");
-                View.ausgabe("Bitte geben Sie die ID des Vorschlags ein:");
-                int id = View.eingabeInt();
-                try {
-                    vorschlagsService.vorschlagAblehnen(id);
-                    View.ausgabe("❌ Vorschlag wurde als abgelehnt markiert.");
-                } catch (CheckedException e) {
-                    View.ausgabe(e.getMessage());
+                case 3 -> {
+                    View.ausgabe("\n📦 Vorschlag ablehnen");
+                    View.ausgabe("Bitte geben Sie die ID des Vorschlags ein:");
+                    int id = View.eingabeInt();
+                    try {
+                        vorschlagsService.vorschlagAblehnen(id);
+                        View.ausgabe("❌ Vorschlag wurde als abgelehnt markiert.");
+                    } catch (CheckedException e) {
+                        View.ausgabe(e.getMessage());
+                    }
+                    View.pauseBisEnter();
                 }
-                View.pauseBisEnter();
+                case 4 -> {
+                    View.ausgabe("Zurück zum Hauptmenü...");
+                    zustand = false;
+                }
+                default -> View.ausgabe(UNGUELTIG_EINGABE);
             }
-            case 4 -> View.ausgabe("Zurück zum Hauptmenü...");
-            default -> View.ausgabe(UNGUELTIG_EINGABE);
         }
     }
 
     private void nutzerVerwalten() {
-        pause(250);
-        View.ausgabe("\n👤 Nutzerverwaltung");
-        View.ausgabe(TRENNLINIE);
-        View.ausgabe("1. Alle Nutzer anzeigen");
-        View.ausgabe("2. Nutzer löschen");
-        View.ausgabe("3. Zurück zum Hauptmenü");
-        View.ausgabe(TRENNLINIE);
-        View.ausgabe(WAEHLE_OPTION);
+        boolean zustand = true;
+        while (zustand) {
+            pause(250);
+            View.ausgabe("\n👤 Nutzerverwaltung");
+            View.ausgabe(TRENNLINIE);
+            View.ausgabe("1. Alle Nutzer anzeigen");
+            View.ausgabe("2. Nutzer löschen");
+            View.ausgabe("3. Zurück zum Hauptmenü");
+            View.ausgabe(TRENNLINIE);
+            View.ausgabe(WAEHLE_OPTION);
 
-        int auswahl = View.eingabeInt();
-        switch (auswahl) {
-            case 1 -> {
-                List<Nutzer> nutzerList = nutzerService.alleNutzer();
-                if (nutzerList.isEmpty()) {
-                    View.ausgabe("Keine Nutzer gefunden.");
-                } else {
-                    View.ausgabe("Nutzerliste:");
-                    for (Nutzer n : nutzerList) {
-                        View.ausgabe(n.toString());
+            int auswahl = View.eingabeInt();
+            switch (auswahl) {
+                case 1 -> {
+                    List<Nutzer> nutzerList = nutzerService.alleNutzer();
+                    if (nutzerList.isEmpty()) {
+                        View.ausgabe("Keine Nutzer gefunden.");
+                    } else {
+                        View.ausgabe("Nutzerliste:");
+                        for (Nutzer n : nutzerList) {
+                            View.ausgabe(n.toString());
+                        }
                     }
+                    View.pauseBisEnter();
                 }
-                View.pauseBisEnter();
-            }
-            case 2 -> {
-                View.ausgabe("Bitte geben Sie die ID des zu löschenden Nutzers an: ");
-                int id = View.eingabeInt();
-                try {
-                    nutzerService.nutzerLoeschen(id);
-                } catch (CheckedException e) {
-                    View.ausgabe(e.getMessage());
+                case 2 -> {
+                    View.ausgabe("Bitte geben Sie die ID des zu löschenden Nutzers an: ");
+                    int id = View.eingabeInt();
+                    try {
+                        nutzerService.nutzerLoeschen(id);
+                    } catch (CheckedException e) {
+                        View.ausgabe(e.getMessage());
+                    }
+                    View.pauseBisEnter();
                 }
-                View.pauseBisEnter();
+                case 3 -> {
+                    View.ausgabe("Zurück zum Hauptmenü...");
+                    zustand = false;
+                }
+                default -> View.ausgabe(UNGUELTIG_EINGABE);
             }
-            case 3 -> View.ausgabe("Zurück zum Hauptmenü...");
-            default -> View.ausgabe(UNGUELTIG_EINGABE);
         }
     }
 
@@ -241,7 +265,7 @@ public class Controller {
             String benutzername = View.eingabe("Benutzername: ").trim();
             String passwort = View.eingabe("Passwort: ").trim();
             if (benutzername.isEmpty() || passwort.isEmpty()) {
-                View.ausgabe("⚠️ Benutzername und Passwort dürfen nicht leer sein.\n");
+                View.ausgabe("⚠️ Benutzername oder Passwort dürfen nicht leer sein.\n");
                 continue;
             }
             Nutzer nutzer = nutzerService.authentifizieren(benutzername, passwort); // Schauen, ob in der DB Benutzernamen doppelt vorkommen können

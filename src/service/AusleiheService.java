@@ -32,14 +32,14 @@ public class AusleiheService {
     }
 
     public void ausleihen(int id, Nutzer nutzer) throws CheckedException {
-        Objects.requireNonNull(nutzer);
+        Objects.requireNonNull(nutzer); // Diese Logik ausgiebig testen!!!
         Buch buch = sucheBuch(id);
         if (buch.isAvailable() && !buch.isRentingStatus()) {
             List<Vormerkerliste> vormerker = vormerkerlisteDAO.findByBookIdSorted(buch.getBookId());
             if (!vormerker.isEmpty()) {
-                Vormerkerliste ersterEintrag = vormerker.getFirst();
+                Vormerkerliste ersterEintrag = vormerker.getFirst(); // Wir holen uns die Vormerkerliste und schauen, wer an erster Stelle für das Buch steht, dieser hat dann das Recht das Buch auszuleihen
                 if (ersterEintrag.getNutzer().getCustomerId() != nutzer.getCustomerId()) {
-                    throw new CheckedException("❌ Das Buch ist vorgemerkt. Sie sind nicht an erster Stelle.");
+                    throw new CheckedException("❌ Das Buch ist bereits vorgemerkt.");
                 }
                 View.ausgabe("🔁 Sie wurden aus der Vormerkerliste entfernt.");
                 vormerkerlisteDAO.delete(ersterEintrag);
@@ -78,7 +78,11 @@ public class AusleiheService {
                 throw new CheckedException("❌ Sie können dieses Buch nicht zurückgeben. Sie haben es nicht ausgeliehen.");
             }
         } else {
-            throw new CheckedException("❌ Sie können dieses Buch nicht zurückgeben. Es ist nicht verliehen");
+            throw new CheckedException("❌ Sie können dieses Buch nicht zurückgeben. Es ist nicht verliehen"); // Evtl abändern
         }
+    }
+
+    public List<Buch> holeAlleBücher() {
+        return buchDAO.getAll();
     }
 }
