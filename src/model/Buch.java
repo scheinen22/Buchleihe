@@ -76,7 +76,10 @@ public class Buch {
         this.fernleihe = fernleihe;
     }
     @Override
+    //TODO: Bei den Zuständen eine Prüfung einbauen, und dann die false und true werte auf sprache umbiegen
     public String toString() {
-        return "test";
+        return "\n----------------------" + "\nTitel: " + getTitel() + "\nAutor: " + getAuthor() +
+                "\nVerfügbarkeit im Lager: " + isAvailable() + "\nAusleihstatus: " + isRentingStatus() +
+                "\nFernleihe: " + isFernleihe() + "\n----------------------";
     }
 }

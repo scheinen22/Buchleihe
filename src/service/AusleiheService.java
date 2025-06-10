@@ -34,6 +34,15 @@ public class AusleiheService {
     public void ausleihen(int id, Nutzer nutzer) throws CheckedException {
         Objects.requireNonNull(nutzer); // Diese Logik ausgiebig testen!!!
         Buch buch = sucheBuch(id);
+        // Fernleihen dürfen ausgeliehen werden, auch wenn das Buch als "nicht verfügbar" markiert ist, wir beziehen das Buch dann quasi von woanders.
+        if (buch.isFernleihe() && !buch.isAvailable() && !buch.isRentingStatus()) {
+            buch.setAusgeliehenAnNutzer(nutzer);
+            buch.setAvailable(false);
+            buch.setRentingStatus(true);
+            buchDAO.update(buch);
+            View.ausgabe("📦 Hinweis: Dieses Buch wird als Fernleihe bereitgestellt.");
+            return;
+        }
         if (buch.isAvailable() && !buch.isRentingStatus()) {
             List<Vormerkerliste> vormerker = vormerkerlisteDAO.findByBookIdSorted(buch.getBookId());
             if (!vormerker.isEmpty()) {
@@ -82,7 +91,7 @@ public class AusleiheService {
         }
     }
 
-    public List<Buch> holeAlleBücher() {
+    public List<Buch> holeAlleBuecher() {
         return buchDAO.getAll();
     }
 }

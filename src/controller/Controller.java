@@ -102,7 +102,7 @@ public class Controller {
     private void katalogAnzeigen() {
         View.ausgabe("\n📚 Buchkatalog");
         pause(500);
-        List<Buch> alleBuecher = ausleiheService.holeAlleBücher();
+        List<Buch> alleBuecher = ausleiheService.holeAlleBuecher();
         for (Buch buch : alleBuecher) {
             View.ausgabe(buch.toString());
         }
