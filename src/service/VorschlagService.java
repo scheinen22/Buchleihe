@@ -12,7 +12,6 @@ import java.util.Objects;
 /**
  * Vorschlagservice enthält die Businesslogik für die Vorschläge.
  * In dieser Klasse wird mit den besorgten Objekten aus der Datenbank hantiert.
- * @author Said Halilovic
  */
 public class VorschlagService {
 

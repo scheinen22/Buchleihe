@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 /**
  * Die Klasse View ist eine Hilfsklasse zur Verarbeitung von Konsoleneingaben und -ausgaben.
- * @author Joshua Gawenda
  */
 public class View {
 
