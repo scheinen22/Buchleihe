@@ -10,6 +10,16 @@ public class Buch {
     private Nutzer ausgeliehenAnNutzer;
     private boolean fernleihe;
 
+    /**
+     * Tabelle Buch wird als Modelklasse abgebildet.
+     * @param titel
+     * @param author
+     * @param bookId
+     * @param available
+     * @param rentingStatus
+     * @param ausgeliehenAnNutzer
+     * @param fernleihe
+     */
     public Buch(String titel, String author, int bookId, boolean available, boolean rentingStatus, Nutzer ausgeliehenAnNutzer, boolean fernleihe) {
         setTitel(titel);
         setAuthor(author);

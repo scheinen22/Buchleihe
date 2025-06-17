@@ -15,6 +15,10 @@ import org.jetbrains.annotations.Nullable;
 import exception.SQLAbfrageFehlgeschlagenException;
 import model.Buch;
 
+/**
+ * Die Klasse enthält alle nötigen SQL Operationen, um an
+ * der Tabelle Buch die nötigen Operationen auszuführen.
+ */
 @SuppressWarnings("java:S6548")
 public class BuchDAO implements GenericDAO<Buch> {
 

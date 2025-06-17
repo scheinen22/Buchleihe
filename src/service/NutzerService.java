@@ -8,6 +8,11 @@ import view.View;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Nutzerservice enthält die Businesslogik für die Nutzer.
+ * In dieser Klasse wird mit den besorgten Objekten aus der Datenbank hantiert.
+ * @author Joshua Gawenda
+ */
 public class NutzerService {
 
     private final NutzerDAO nutzerDAO;

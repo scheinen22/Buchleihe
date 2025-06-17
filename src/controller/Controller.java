@@ -16,6 +16,9 @@ import view.View;
 
 import java.util.List;
 
+/**
+ * Der Controller steuert den Programmablauf und enthält den Programmeinstieg.
+ */
 public class Controller {
 
     private final AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance(), VormerkerlisteDAO.getInstance());

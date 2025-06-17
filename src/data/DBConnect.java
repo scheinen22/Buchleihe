@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Unterste Schicht in der Architektur. In der Klasse werden nötige Parameter
+ * um eine Connection mit der Datenbank aufzubauen festgelegt.
+ */
 @SuppressWarnings("java:S2115") // Passwort ist nicht nötig bei der Projektgröße
 public class DBConnect {
 

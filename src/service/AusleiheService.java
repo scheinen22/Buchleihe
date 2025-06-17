@@ -13,6 +13,11 @@ import model.Nutzer;
 import model.Vormerkerliste;
 import view.View;
 
+/**
+ * Ausleiheservice enthält die Businesslogik für die Ausleihen und Vormerkungen.
+ * In dieser Klasse wird mit den besorgten Objekten aus der Datenbank hantiert.
+ * @author Said Halilovic, Joshua Gawenda
+ */
 public class AusleiheService {
 
     private final BuchDAO buchDAO;

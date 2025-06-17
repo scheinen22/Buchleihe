@@ -67,7 +67,7 @@ public class Vorschlag {
     }
 
     @Override
-    public String toString() {
+    public String toString() { // VERBESSERN
         return "ID: " + id + " \nTitel: " + buchTitel + "\nAutor: " + autor +
                 "\nStatus: " + status + "\nNutzer: \n" + nutzer +
                 "\nBenachrichtigt: " + (benachrichtigt ? "✅" : "❌");
