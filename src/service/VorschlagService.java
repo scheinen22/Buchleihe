@@ -1,13 +1,17 @@
 package service;
 
+import data.BuchDAO;
 import data.VorschlagDAO;
 import exception.CheckedException;
+import model.Buch;
 import model.Nutzer;
 import model.Vorschlag;
 import model.VorschlagsStatus;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * Vorschlagservice enthält die Businesslogik für die Vorschläge.
@@ -16,9 +20,12 @@ import java.util.Objects;
 public class VorschlagService {
 
     private final VorschlagDAO vorschlagDAO;
+    private final BuchDAO buchDAO;
+    private final Random rand = new Random();
 
-    public VorschlagService(VorschlagDAO vorschlagDAO) {
+    public VorschlagService(VorschlagDAO vorschlagDAO,  BuchDAO buchDAO) {
         this.vorschlagDAO = vorschlagDAO;
+        this.buchDAO = buchDAO;
     }
 
     public void buchVorschlagen(String titel, String autor, Nutzer nutzer) {
@@ -46,6 +53,13 @@ public class VorschlagService {
         }
         vorschlag.setStatus(VorschlagsStatus.BESTELLT);
         vorschlagDAO.update(vorschlag);
+        buchAnlegen(vorschlag);
+    }
+
+    private void buchAnlegen(Vorschlag vorschlag) {
+        Buch buch = new Buch(vorschlag.getBuchTitel(), vorschlag.getAutor(), -1, false, false,
+                 true, vorschlag.getNutzer());
+        buchDAO.save(buch);
     }
 
     public void benachrichtigen(Vorschlag vorschlag) {

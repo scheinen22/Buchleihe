@@ -35,15 +35,16 @@ public class BuchDAO implements GenericDAO<Buch> {
     public void save(@NotNull Buch buch) {
         Objects.requireNonNull(buch, BUCH_NICHT_NULL);
         try (Connection con = DBConnect.getConnection()) {
-            String sql = "INSERT INTO Buch (titel, author, bookId, available, rentingStatus, nutzerId, fernleihe) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Buch (titel, author, bookId, available, rentingStatus, fernleihe, reserviertVonNutzer) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement stmt = con.prepareStatement(sql)) { // Bietet mehr Sicherheit, leichter zu verstehen
                 stmt.setString(1, buch.getTitel());
                 stmt.setString(2, buch.getAuthor());
                 stmt.setInt(3, buch.getBookId());
                 stmt.setBoolean(4, buch.isAvailable());
                 stmt.setBoolean(5, buch.isRentingStatus());
-                stmt.setInt(6, buch.getAusgeliehenAnNutzer().getCustomerId());
-                stmt.setBoolean(7, buch.isFernleihe());
+                stmt.setBoolean(6, buch.isFernleihe());
+                stmt.setInt(7, buch.getReserviertVonNutzer().getCustomerId());
                 stmt.executeUpdate();
             }
         } catch (SQLException e) {
@@ -73,19 +74,19 @@ public class BuchDAO implements GenericDAO<Buch> {
     @Override
     public void update(@NotNull Buch buch) {
         Objects.requireNonNull(buch, BUCH_NICHT_NULL);
-        String sql = "UPDATE Buch SET titel = ?, author = ?, available = ?, rentingStatus = ?, nutzerId = ?, fernleihe = ? WHERE bookId = ?";
+        String sql = "UPDATE Buch SET titel = ?, author = ?, available = ?, rentingStatus = ?, fernleihe = ?, reserviertVonNutzer = ? WHERE bookId = ?";
         try (Connection con = DBConnect.getConnection(); PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, buch.getTitel());
             stmt.setString(2, buch.getAuthor());
             stmt.setBoolean(3, buch.isAvailable());
             stmt.setBoolean(4, buch.isRentingStatus());
-            if (buch.getAusgeliehenAnNutzer() != null) {
-                stmt.setInt(5, buch.getAusgeliehenAnNutzer().getCustomerId());
+            stmt.setInt(5, buch.getBookId());
+            stmt.setBoolean(6, buch.isFernleihe());
+            if (buch.getReserviertVonNutzer() != null) {
+                stmt.setInt(7, buch.getReserviertVonNutzer().getCustomerId());
             } else {
-                stmt.setNull(5, java.sql.Types.INTEGER);
+                stmt.setNull(7, java.sql.Types.INTEGER);
             }
-            stmt.setInt(6, buch.getBookId());
-            stmt.setBoolean(7, buch.isFernleihe());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new SQLAbfrageFehlgeschlagenException(e);
@@ -124,8 +125,8 @@ public class BuchDAO implements GenericDAO<Buch> {
         String author = rs.getString("author");
         boolean available = rs.getBoolean("available");
         boolean rentingStatus = rs.getBoolean("rentingStatus");
-        Nutzer nutzer = NutzerDAO.getInstance().findById(rs.getInt("nutzerId"));
         boolean fernleihe = rs.getBoolean("fernleihe");
-        return new Buch(titel, author, id, available, rentingStatus, nutzer, fernleihe);
+        Nutzer nutzerReserviert = NutzerDAO.getInstance().findById(rs.getInt("reserviertVonNutzer"));
+        return new Buch(titel, author, id, available, rentingStatus, fernleihe, nutzerReserviert);
     }
 }

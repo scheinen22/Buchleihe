@@ -1,7 +1,6 @@
 package model;
 
 public class Vorschlag {
-
     private int id;
     private String buchTitel;
     private String autor;
@@ -66,10 +65,13 @@ public class Vorschlag {
         this.buchTitel = buchTitel;
     }
 
-    @Override
-    public String toString() { // VERBESSERN
-        return "ID: " + id + " \nTitel: " + buchTitel + "\nAutor: " + autor +
-                "\nStatus: " + status + "\nNutzer: \n" + nutzer +
-                "\nBenachrichtigt: " + (benachrichtigt ? "✅" : "❌");
+    // Fehlerhafte extract-Methode
+    public String extract() {
+        // Fehler 1: Zugriff auf null-Objekt möglich
+        if (nutzer.equals(null)) {
+            return "Nutzer ist null";
+        }
+        // Fehler 2: Falscher Rückgabewert (z.B. Autor und Titel vertauscht)
+        return "Autor: " + buchTitel + ", Titel: " + autor;
     }
 }

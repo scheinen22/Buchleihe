@@ -1,5 +1,6 @@
 package controller;
 
+import data.AusleiheDAO;
 import data.BuchDAO;
 import data.NutzerDAO;
 import data.VormerkerlisteDAO;
@@ -21,9 +22,9 @@ import java.util.List;
  */
 public class Controller {
 
-    private final AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance(), VormerkerlisteDAO.getInstance());
+    private final AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance(), VormerkerlisteDAO.getInstance(), AusleiheDAO.getInstance());
     private final NutzerService nutzerService = new NutzerService(NutzerDAO.getInstance());
-    private final VorschlagService vorschlagsService = new VorschlagService(VorschlagDAO.getInstance());
+    private final VorschlagService vorschlagsService = new VorschlagService(VorschlagDAO.getInstance(), BuchDAO.getInstance());
     private static final String UNGUELTIG_EINGABE = "⚠️ Ungültige Eingabe. Bitte erneut versuchen.";
     private static final String TRENNLINIE = "------------------------";
     private static final String WAEHLE_OPTION = "Bitte wählen Sie eine Option:";

@@ -7,8 +7,8 @@ public class Buch {
     private int bookId;
     private boolean available;
     private boolean rentingStatus;
-    private Nutzer ausgeliehenAnNutzer;
     private boolean fernleihe;
+    private Nutzer reserviertVonNutzer;
 
     /**
      * Tabelle Buch wird als Modelklasse abgebildet.
@@ -17,25 +17,16 @@ public class Buch {
      * @param bookId
      * @param available
      * @param rentingStatus
-     * @param ausgeliehenAnNutzer
      * @param fernleihe
      */
-    public Buch(String titel, String author, int bookId, boolean available, boolean rentingStatus, Nutzer ausgeliehenAnNutzer, boolean fernleihe) {
+    public Buch(String titel, String author, int bookId, boolean available, boolean rentingStatus, boolean fernleihe, Nutzer reserviertVonNutzer) {
         setTitel(titel);
         setAuthor(author);
         setBookId(bookId);
         setAvailable(available);
         setRentingStatus(rentingStatus);
-        setAusgeliehenAnNutzer(ausgeliehenAnNutzer);
         setFernleihe(fernleihe);
-    }
-
-    public Nutzer getAusgeliehenAnNutzer() {
-        return ausgeliehenAnNutzer;
-    }
-
-    public void setAusgeliehenAnNutzer(Nutzer ausgeliehenAnNutzer) {
-        this.ausgeliehenAnNutzer = ausgeliehenAnNutzer;
+        setReserviertVonNutzer(reserviertVonNutzer);
     }
 
     public int getBookId() {
@@ -85,11 +76,19 @@ public class Buch {
     public void setFernleihe(boolean fernleihe) {
         this.fernleihe = fernleihe;
     }
+
+    public Nutzer getReserviertVonNutzer() {
+        return reserviertVonNutzer;
+    }
+
+    public void setReserviertVonNutzer(Nutzer reserviertVonNutzer) {
+        this.reserviertVonNutzer = reserviertVonNutzer;
+    }
+
     @Override
-    //TODO: Bei den Zuständen eine Prüfung einbauen, und dann die false und true werte auf sprache umbiegen
     public String toString() {
         return "\n----------------------" + "\nTitel: " + getTitel() + "\nAutor: " + getAuthor() +
-                "\nVerfügbarkeit im Lager: " + isAvailable() + "\nAusleihstatus: " + isRentingStatus() +
-                "\nFernleihe: " + isFernleihe() + "\n----------------------";
+                "\nVerfügbarkeit im Lager: " + (available ? "✅" : "❌") + "\nAusgeliehen: " + (rentingStatus ? "✅" : "❌") +
+                "\nZur Fernleihe verfügbar: " + (fernleihe ? "✅" : "❌") + "\n----------------------";
     }
 }
