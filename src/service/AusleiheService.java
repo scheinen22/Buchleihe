@@ -2,7 +2,6 @@ package service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,43 +39,61 @@ public class AusleiheService {
         Objects.requireNonNull(nutzer);
         Buch buch = sucheBuch(buchId);
         List<Ausleihe> alleAusleihen = ausleiheDAO.findAlleBuecherByBuchIdUndOffen(buchId);
-        // Fernleihe: erlaubt parallele Ausleihen
-        if (buch.isFernleihe() && alleAusleihen != null && !alleAusleihen.isEmpty()) {
+        // Schaue, ob die Liste null ist
+        List<Ausleihe> sichereAusleihen = (alleAusleihen != null) ? alleAusleihen : List.of();
+        List<Ausleihe> gefiltertNachNutzer = sichereAusleihen.stream()
+                .filter(a -> a.getNutzer().getCustomerId() == nutzer.getCustomerId())
+                .toList();
+        // Fernleihe: erlaubt parallele Ausleihen, aber nur wenn das Buch schon verliehen ist.
+        if (buch.isFernleihe() && !sichereAusleihen.isEmpty() && gefiltertNachNutzer.isEmpty()) {
             Ausleihe fernleihe = new Ausleihe(buch, nutzer, Date.valueOf(LocalDate.now()), true);
             ausleiheDAO.save(fernleihe);
             View.ausgabe("📦 Hinweis: Dieses Buch wird als Fernleihe bereitgestellt.");
             return;
         }
-        List<Ausleihe> vollgefilterteAusleihen = filtereAusleihen(alleAusleihen != null ? alleAusleihen : List.of(), buch);
-        if (!vollgefilterteAusleihen.isEmpty() && buch.getReserviertVonNutzer() == null) {
-            List<Vormerkerliste> vormerker = vormerkerlisteDAO.findByBookIdSorted(buchId);
-            if (!vormerker.isEmpty()) {
-                Vormerkerliste ersterEintrag = vormerker.getFirst();
-                if (ersterEintrag.getNutzer().getCustomerId() != nutzer.getCustomerId()) {
-                    throw new CheckedException("❌ Das Buch ist bereits vorgemerkt.");
-                }
-                View.ausgabe("🔁 Sie wurden aus der Vormerkerliste entfernt.");
-                vormerkerlisteDAO.delete(ersterEintrag);
+        // Aktuelle Ausleihen werden präpariert, Fernleihen entfernt
+        List<Ausleihe> vollgefilterteAusleihen = sichereAusleihen.stream()
+                .filter(a -> a.getRueckgabedatum() == null && !a.isFernleihe() && buch.isAvailable() && !buch.isRentingStatus())
+                .toList();
+        if (vollgefilterteAusleihen.isEmpty()) {
+            // Nutzer hat das Buch reserviert → darf ausleihen
+            if (buch.getReserviertVonNutzer() != null && buch.getReserviertVonNutzer().getCustomerId() == nutzer.getCustomerId()) {
+                // Reservierung einlösen
+                buch.setReserviertVonNutzer(null);
+                Ausleihe neueAusleihe = new Ausleihe(buch, nutzer, Date.valueOf(LocalDate.now()), false);
+                ausleiheDAO.save(neueAusleihe);
+                buch.setAvailable(false);
+                buch.setRentingStatus(true);
+                buchDAO.update(buch);
+                return;
             }
-            Ausleihe neueAusleihe = new Ausleihe(buch, nutzer, Date.valueOf(LocalDate.now()), false);
-            ausleiheDAO.save(neueAusleihe);
-            buch.setAvailable(false);
-            buch.setRentingStatus(true);
-            buchDAO.update(buch);
+            // Kein Anspruch → Prüfe Vormerkerliste
+            if (buch.getReserviertVonNutzer() == null) {
+                List<Vormerkerliste> vormerker = vormerkerlisteDAO.findByBookIdSorted(buchId);
+                if (!vormerker.isEmpty()) {
+                    Vormerkerliste ersterEintrag = vormerker.getFirst();
+                    if (ersterEintrag.getNutzer().getCustomerId() != nutzer.getCustomerId()) {
+                        throw new CheckedException("❌ Das Buch ist bereits vorgemerkt.");
+                    }
+                    View.ausgabe("🔁 Sie wurden aus der Vormerkerliste entfernt.");
+                    vormerkerlisteDAO.delete(ersterEintrag);
+                }
+                Ausleihe neueAusleihe = new Ausleihe(buch, nutzer, Date.valueOf(LocalDate.now()), false);
+                ausleiheDAO.save(neueAusleihe);
+                buch.setAvailable(false);
+                buch.setRentingStatus(true);
+                buchDAO.update(buch);
+            }
+            if (buch.getReserviertVonNutzer() != null) {
+                throw new CheckedException("❌ Das Buch ist aktuell von jemandem reserviert.");
+            }
         } else {
+            if (gefiltertNachNutzer.stream().anyMatch(a -> a.getNutzer().getCustomerId() == nutzer.getCustomerId())) {
+                throw new CheckedException("❌ Das Buch wurde bereits von dir ausgeliehen!");
+            }
             vormerken(nutzer, buch);
             throw new CheckedException("❌ Das Buch ist bereits verliehen!");
         }
-    }
-
-    private List<Ausleihe> filtereAusleihen(List<Ausleihe> alleAusleihen,  Buch buch) {
-        List<Ausleihe> filter = new ArrayList<>();
-        for (Ausleihe ausleihe : alleAusleihen) {
-            if (ausleihe.getRueckgabedatum() == null && !ausleihe.isFernleihe() && buch.isAvailable()) {
-                filter.add(ausleihe);
-            }
-        }
-        return filter;
     }
 
     private void vormerken(Nutzer nutzer, Buch buch) {
@@ -105,6 +122,7 @@ public class AusleiheService {
         nutzerAusleihe.setRueckgabedatum(Date.valueOf(LocalDate.now()));
         ausleiheDAO.update(nutzerAusleihe);
         if (!nutzerAusleihe.isFernleihe()) {
+            // Prüft, ob es weitere Ausleihen zu demselben Buch gibt. Zur Sicherheit drin lassen, um inkonsistente Datensätze zu vermeiden.
             boolean weitereNormaleAusleihen = offeneAusleihen.stream()
                     .anyMatch(a -> a.getId() != nutzerAusleihe.getId() && !a.isFernleihe());
             if (!weitereNormaleAusleihen) {

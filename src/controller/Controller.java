@@ -244,7 +244,7 @@ public class Controller {
         int isbn = View.eingabeInt();
         try {
             ausleiheService.rueckgabe(isbn, nutzer);
-            View.ausgabe("Das Buch wurde erfolgreich zurückgegeben.");
+            View.ausgabe("✅ Das Buch wurde erfolgreich zurückgegeben.");
         } catch (CheckedException e) {
             View.ausgabe(e.getMessage());
         }
