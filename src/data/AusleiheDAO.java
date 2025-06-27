@@ -112,23 +112,6 @@ public class AusleiheDAO implements GenericDAO<Ausleihe> {
     }
 
     @Nullable
-    public Ausleihe findByBuchIdUndOffen(int buchId) {
-        String sql = "SELECT * FROM Ausleihe WHERE buch_Id = ? AND rueckgabedatum IS NULL";
-        try (Connection con = DBConnect.getConnection();
-             PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setInt(1, buchId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return extract(rs);
-                }
-            }
-        } catch (SQLException e) {
-            throw new SQLAbfrageFehlgeschlagenException(e);
-        }
-        return null;
-    }
-
-    @Nullable
     public List<Ausleihe> findAlleBuecherByBuchIdUndOffen(int buchId) {
         String sql = "SELECT * FROM Ausleihe WHERE buch_Id = ? AND rueckgabedatum IS NULL";
         List<Ausleihe> list = new ArrayList<>();

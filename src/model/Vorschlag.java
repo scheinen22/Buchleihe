@@ -64,14 +64,4 @@ public class Vorschlag {
     public void setBuchTitel(String buchTitel) {
         this.buchTitel = buchTitel;
     }
-
-    // Fehlerhafte extract-Methode
-    public String extract() {
-        // Fehler 1: Zugriff auf null-Objekt möglich
-        if (nutzer.equals(null)) {
-            return "Nutzer ist null";
-        }
-        // Fehler 2: Falscher Rückgabewert (z.B. Autor und Titel vertauscht)
-        return "Autor: " + buchTitel + ", Titel: " + autor;
-    }
 }

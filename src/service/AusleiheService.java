@@ -3,7 +3,6 @@ package service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 import data.AusleiheDAO;
 import data.BuchDAO;
@@ -36,7 +35,6 @@ public class AusleiheService {
     }
 
     public void ausleihen(int buchId, Nutzer nutzer) throws CheckedException {
-        Objects.requireNonNull(nutzer);
         Buch buch = sucheBuch(buchId);
         List<Ausleihe> alleAusleihen = ausleiheDAO.findAlleBuecherByBuchIdUndOffen(buchId);
         // Schaue, ob die Liste null ist

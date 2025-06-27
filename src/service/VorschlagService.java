@@ -8,10 +8,7 @@ import model.Nutzer;
 import model.Vorschlag;
 import model.VorschlagsStatus;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 
 /**
  * Vorschlagservice enthält die Businesslogik für die Vorschläge.
@@ -21,7 +18,6 @@ public class VorschlagService {
 
     private final VorschlagDAO vorschlagDAO;
     private final BuchDAO buchDAO;
-    private final Random rand = new Random();
 
     public VorschlagService(VorschlagDAO vorschlagDAO,  BuchDAO buchDAO) {
         this.vorschlagDAO = vorschlagDAO;
@@ -29,7 +25,6 @@ public class VorschlagService {
     }
 
     public void buchVorschlagen(String titel, String autor, Nutzer nutzer) {
-        Objects.requireNonNull(nutzer);
         Vorschlag vorschlag = new Vorschlag(0, titel, autor, VorschlagsStatus.OFFEN, nutzer, false);
         vorschlagDAO.save(vorschlag);
     }
@@ -39,7 +34,6 @@ public class VorschlagService {
     }
 
     public List<Vorschlag> nichtBenachrichtigteNutzer(Nutzer nutzer) {
-        Objects.requireNonNull(nutzer);
         return vorschlagDAO.findNichtBenachrichtigte(nutzer.getCustomerId());
     }
 
@@ -63,7 +57,6 @@ public class VorschlagService {
     }
 
     public void benachrichtigen(Vorschlag vorschlag) {
-        Objects.requireNonNull(vorschlag);
         vorschlag.setBenachrichtigt(true);
         vorschlagDAO.update(vorschlag);
     }
