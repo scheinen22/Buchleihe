@@ -119,6 +119,12 @@ public class BuchDAO implements GenericDAO<Buch> {
         return buecherListe;
     }
 
+    /**
+     * Extrahiert die Daten aus dem ResultSet und erstellt ein Buch-Objekt.
+     * @param rs Das ResultSet aus der Datenbankabfrage.
+     * @return Ein Buch-Objekt.
+     * @throws SQLException Wenn ein Fehler beim Zugriff auf das ResultSet auftritt.
+     */
     private Buch extractBuch(ResultSet rs) throws SQLException {
         int id = rs.getInt("bookId");
         String titel = rs.getString("titel");

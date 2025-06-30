@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("java:S6548")
 public class AusleiheDAO implements GenericDAO<Ausleihe> {
 
     private static final AusleiheDAO INSTANCE = new AusleiheDAO();
@@ -129,6 +130,12 @@ public class AusleiheDAO implements GenericDAO<Ausleihe> {
         return list;
     }
 
+    /**
+     * Extrahiert die Daten aus dem ResultSet und erstellt ein Ausleihe-Objekt.
+     * @param rs Das ResultSet aus der Datenbankabfrage.
+     * @return Ein Ausleihe-Objekt.
+     * @throws SQLException Wenn ein Fehler beim Zugriff auf das ResultSet auftritt.
+     */
     private Ausleihe extract(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         int buchId = rs.getInt("buch_Id");

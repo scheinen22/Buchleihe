@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("java:S6548")
 public class VormerkerlisteDAO implements GenericDAO<Vormerkerliste> {
 
     private static final VormerkerlisteDAO INSTANCE = new VormerkerlisteDAO();
@@ -49,9 +50,7 @@ public class VormerkerlisteDAO implements GenericDAO<Vormerkerliste> {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    Nutzer nutzer = NutzerDAO.getInstance().findById(rs.getInt("nutzerId"));
-                    Buch buch = BuchDAO.getInstance().findById(rs.getInt("buchId"));
-                    return new Vormerkerliste(nutzer, buch, rs.getDate("eintrittsDatum"));
+                    return extractVormerkerliste(rs);
                 }
             }
         } catch (SQLException e) {
@@ -77,26 +76,6 @@ public class VormerkerlisteDAO implements GenericDAO<Vormerkerliste> {
         return false;
     }
 
-    public List<Vormerkerliste> findByBookId(int id) {
-        List<Vormerkerliste> vormerkerlisteListe = new ArrayList<>();
-        String sql = "SELECT * FROM Vormerkerliste WHERE buchId = ?";
-        try (Connection con = DBConnect.getConnection();
-             PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Nutzer nutzer = NutzerDAO.getInstance().findById(rs.getInt("nutzerId"));
-                    Buch buch = BuchDAO.getInstance().findById(rs.getInt("buchId"));
-                    Vormerkerliste vormerkerliste = new Vormerkerliste(nutzer, buch, rs.getDate("eintrittsDatum"));
-                    vormerkerlisteListe.add(vormerkerliste);
-                }
-            }
-        } catch (SQLException e) {
-            throw new SQLAbfrageFehlgeschlagenException(e);
-        }
-        return vormerkerlisteListe;
-    }
-
     public List<Vormerkerliste> findByBookIdSorted(int buchId) {
         List<Vormerkerliste> liste = new ArrayList<>();
         String sql = "SELECT * FROM Vormerkerliste WHERE buchId = ? ORDER BY eintrittsDatum ASC";
@@ -105,10 +84,7 @@ public class VormerkerlisteDAO implements GenericDAO<Vormerkerliste> {
             stmt.setInt(1, buchId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Nutzer nutzer = NutzerDAO.getInstance().findById(rs.getInt("nutzerId"));
-                    Buch buch = BuchDAO.getInstance().findById(rs.getInt("buchId"));
-                    Vormerkerliste eintrag = new Vormerkerliste(nutzer, buch, rs.getDate("eintrittsDatum"));
-                    liste.add(eintrag);
+                    liste.add(extractVormerkerliste(rs));
                 }
             }
         } catch (SQLException e) {
@@ -154,14 +130,23 @@ public class VormerkerlisteDAO implements GenericDAO<Vormerkerliste> {
              PreparedStatement stmt = con.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                Nutzer nutzer = NutzerDAO.getInstance().findById(rs.getInt("nutzerId"));
-                Buch buch = BuchDAO.getInstance().findById(rs.getInt("buchId"));
-                Vormerkerliste vormerkerliste = new Vormerkerliste(nutzer, buch, rs.getDate("eintrittsDatum"));
-                vormerkerlisteListe.add(vormerkerliste);
+                vormerkerlisteListe.add(extractVormerkerliste(rs));
             }
         } catch (SQLException e) {
             throw new SQLAbfrageFehlgeschlagenException(e);
         }
         return vormerkerlisteListe;
+    }
+
+    /**
+     * Extrahiert die Daten aus dem ResultSet und erstellt ein Vormerkerliste-Objekt.
+     * @param rs Das ResultSet aus der Datenbankabfrage.
+     * @return Ein Vormerkerliste-Objekt.
+     * @throws SQLException Wenn ein Fehler beim Zugriff auf das ResultSet auftritt.
+     */
+    private Vormerkerliste extractVormerkerliste(ResultSet rs) throws SQLException {
+        Nutzer nutzer = NutzerDAO.getInstance().findById(rs.getInt("nutzerId"));
+        Buch buch = BuchDAO.getInstance().findById(rs.getInt("buchId"));
+        return new Vormerkerliste(nutzer, buch, rs.getDate("eintrittsDatum"));
     }
 }

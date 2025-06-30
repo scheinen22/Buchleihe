@@ -12,12 +12,12 @@ public class Ausleihe {
     private boolean fernleihe;
 
     public Ausleihe(int id, Buch buch, Nutzer nutzer, Date ausleihdatum, Date rueckgabedatum, boolean fernleihe) {
-        this.id = id;
-        this.buch = buch;
-        this.nutzer = nutzer;
-        this.ausleihdatum = ausleihdatum;
-        this.rueckgabedatum = rueckgabedatum;
-        this.fernleihe = fernleihe;
+        setId(id);
+        setBuch(buch);
+        setNutzer(nutzer);
+        setAusleihdatum(ausleihdatum);
+        setRueckgabedatum(rueckgabedatum);
+        setFernleihe(fernleihe);
     }
 
     public Ausleihe(Buch buch, Nutzer nutzer, Date ausleihdatum, boolean fernleihe) {

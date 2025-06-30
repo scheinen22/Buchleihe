@@ -126,6 +126,12 @@ public class NutzerDAO implements GenericDAO<Nutzer> {
         return nutzerListe;
     }
 
+    /**
+     * Extrahiert die Daten aus dem ResultSet und erstellt ein Nutzer-Objekt.
+     * @param rs Das ResultSet aus der Datenbankabfrage.
+     * @return Ein Nutzer-Objekt.
+     * @throws SQLException Wenn ein Fehler beim Zugriff auf das ResultSet auftritt.
+     */
     private Nutzer extractNutzer(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String name = rs.getString("name");

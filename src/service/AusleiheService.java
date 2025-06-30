@@ -14,18 +14,37 @@ import model.Nutzer;
 import model.Vormerkerliste;
 import view.View;
 
+/**
+ * Der AusleiheService enthält die gesamte Geschäftslogik für Prozesse rund um die Ausleihe,
+ * Rückgabe und Suche von Büchern. Er koordiniert die Interaktionen zwischen den zugehörigen DAOs
+ * sowie dem Controller.
+ */
 public class AusleiheService {
 
     private final BuchDAO buchDAO;
     private final VormerkerlisteDAO vormerkerlisteDAO;
     private final AusleiheDAO ausleiheDAO;
 
+    /**
+     * Erstellt eine neue Instanz des AusleiheService. Stichwort Dependency Injection.
+     *
+     * @param buchDAO           Das DAO für den Zugriff auf Buch-Daten.
+     * @param vormerkerlisteDAO Das DAO für den Zugriff auf die Vormerkerliste.
+     * @param ausleiheDAO       Das DAO für den Zugriff auf Ausleih-Daten.
+     */
     public AusleiheService(BuchDAO buchDAO, VormerkerlisteDAO vormerkerlisteDAO, AusleiheDAO ausleiheDAO) {
         this.buchDAO = buchDAO;
         this.vormerkerlisteDAO = vormerkerlisteDAO;
         this.ausleiheDAO = ausleiheDAO;
     }
 
+    /**
+     * Sucht ein Buch anhand seiner eindeutigen ID.
+     *
+     * @param id Die ID (ISBN) des zu suchenden Buches.
+     * @return Das gefundene Buch-Objekt.
+     * @throws CheckedException Wenn kein Buch mit der angegebenen ID gefunden wird.
+     */
     public Buch sucheBuch(int id) throws CheckedException {
         Buch buch = buchDAO.findById(id);
         if (buch == null) {
@@ -34,6 +53,14 @@ public class AusleiheService {
         return buch;
     }
 
+    /**
+     * Führt den Ausleihvorgang für ein Buch durch einen Nutzer aus.
+     * Die Methode prüft Verfügbarkeit, Reservierungen, Vormerkungen und den Sonderfall der Fernleihe.
+     *
+     * @param buchId Die ID des auszuleihenden Buches.
+     * @param nutzer Der Nutzer, der das Buch ausleihen möchte.
+     * @throws CheckedException Wenn das Buch aus einem fachlichen Grund nicht ausgeliehen werden kann.
+     */
     public void ausleihen(int buchId, Nutzer nutzer) throws CheckedException {
         Buch buch = sucheBuch(buchId);
         List<Ausleihe> alleAusleihen = ausleiheDAO.findAlleBuecherByBuchIdUndOffen(buchId);
@@ -94,6 +121,13 @@ public class AusleiheService {
         }
     }
 
+    /**
+     * Private Hilfsmethode, um einen Nutzer auf die Vormerkerliste für ein Buch zu setzen.
+     * Prüft, ob der Nutzer bereits vorgemerkt ist.
+     *
+     * @param nutzer Der vorzumerkende Nutzer.
+     * @param buch   Das Buch, für das vorgemerkt wird.
+     */
     private void vormerken(Nutzer nutzer, Buch buch) {
         if (vormerkerlisteDAO.istSchonVorgemerkt(buch.getBookId(), nutzer.getCustomerId())) {
             View.ausgabe("⚠️ Sie stehen bereits auf der Vormerkerliste für dieses Buch.");
@@ -104,6 +138,13 @@ public class AusleiheService {
         View.ausgabe("📝 Sie wurden erfolgreich auf die Vormerkerliste gesetzt.");
     }
 
+    /**
+     * Verarbeitet die Rückgabe eines Buches durch einen Nutzer.
+     *
+     * @param buchId Die ID des zurückgegebenen Buches.
+     * @param nutzer Der Nutzer, der das Buch zurückgibt.
+     * @throws CheckedException Wenn der Nutzer das Buch nicht ausgeliehen hat oder es gar nicht verliehen ist.
+     */
     public void rueckgabe(int buchId, Nutzer nutzer) throws CheckedException {
         Buch buch = sucheBuch(buchId);
         List<Ausleihe> offeneAusleihen = ausleiheDAO.findAlleBuecherByBuchIdUndOffen(buchId);
@@ -131,6 +172,11 @@ public class AusleiheService {
         }
     }
 
+    /**
+     * Ruft eine Liste aller Bücher im Katalog ab.
+     *
+     * @return Eine Liste aller Bücher.
+     */
     public List<Buch> holeAlleBuecher() {
         return buchDAO.getAll();
     }

@@ -17,6 +17,7 @@ import model.Nutzer;
 import model.Vorschlag;
 import model.VorschlagsStatus;
 
+@SuppressWarnings("java:S6548")
 public class VorschlagDAO implements GenericDAO<Vorschlag> {
 
     private static final VorschlagDAO INSTANCE = new VorschlagDAO();
@@ -124,6 +125,12 @@ public class VorschlagDAO implements GenericDAO<Vorschlag> {
         return list;
     }
 
+    /**
+     * Extrahiert die Daten aus dem ResultSet und erstellt ein Vorschlag-Objekt.
+     * @param rs Das ResultSet aus der Datenbankabfrage.
+     * @return Ein Vorschlag-Objekt.
+     * @throws SQLException Wenn ein Fehler beim Zugriff auf das ResultSet auftritt.
+     */
     private Vorschlag extract(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String titel = rs.getString("buchTitel");

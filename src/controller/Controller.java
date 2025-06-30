@@ -30,7 +30,6 @@ public class Controller {
     private static final String WAEHLE_OPTION = "Bitte wählen Sie eine Option:";
 
     public static void main(String[] args) {
-        nutzerErstellen(false);
         new Controller().start();
     }
 
@@ -54,15 +53,15 @@ public class Controller {
             View.ausgabe("\n📚 Hauptmenü");
             View.ausgabe(TRENNLINIE);
             View.ausgabe("1. Katalog ausgeben");
-            View.ausgabe("2. Buch suchen");// AusleiheService // fertig
-            View.ausgabe("3. Buch ausleihen"); // AusleiheService // FERNLEIHE einbauen
+            View.ausgabe("2. Buch suchen");
+            View.ausgabe("3. Buch ausleihen");
             View.ausgabe("4. Buch zurückgeben");
             View.ausgabe("5. Buch zur Neubeschaffung vorschlagen");
             View.ausgabe("6. Mein Profil anzeigen");
 
             pruefeMitarbeiterStatus(nutzer);
 
-            View.ausgabe("0. Abmelden"); //fertig
+            View.ausgabe("0. Abmelden");
             View.ausgabe(TRENNLINIE);
             View.ausgabe(WAEHLE_OPTION);
 
@@ -327,14 +326,5 @@ public class Controller {
             System.out.print(".");
         }
         System.out.println();
-    }
-
-    // Methode zum schnellen Anlegen von Testnutzern, wird später gelöscht
-    private static void nutzerErstellen(boolean wahl) {
-        if (wahl) {
-            Nutzer nutzer = new Nutzer("ben", "KEIN MITARBEITER", 2, "kmit", "123", false);
-            NutzerDAO nutzerDAO = NutzerDAO.getInstance();
-            nutzerDAO.save(nutzer);
-        }
     }
 }
