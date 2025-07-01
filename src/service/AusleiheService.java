@@ -69,15 +69,18 @@ public class AusleiheService {
         List<Ausleihe> gefiltertNachNutzer = sichereAusleihen.stream()
                 .filter(a -> a.getNutzer().getCustomerId() == nutzer.getCustomerId())
                 .toList();
+        List<Ausleihe> fernleiheRausgefiltert = sichereAusleihen.stream()
+                .filter(ausleihe -> !ausleihe.isFernleihe())
+                .toList();
         // Fernleihe: erlaubt parallele Ausleihen, aber nur wenn das Buch schon verliehen ist.
-        if (buch.isFernleihe() && !sichereAusleihen.isEmpty() && gefiltertNachNutzer.isEmpty()) {
+        if (buch.isFernleihe() && !sichereAusleihen.isEmpty() && gefiltertNachNutzer.isEmpty() && !fernleiheRausgefiltert.isEmpty()) {
             Ausleihe fernleihe = new Ausleihe(buch, nutzer, Date.valueOf(LocalDate.now()), true);
             ausleiheDAO.save(fernleihe);
             View.ausgabe("📦 Hinweis: Dieses Buch wird als Fernleihe bereitgestellt.");
             return;
         }
         // Aktuelle Ausleihen werden präpariert, Fernleihen entfernt
-        List<Ausleihe> vollgefilterteAusleihen = sichereAusleihen.stream()
+        List<Ausleihe> vollgefilterteAusleihen = fernleiheRausgefiltert.stream()
                 .filter(a -> a.getRueckgabedatum() == null)
                 .toList();
         if (vollgefilterteAusleihen.isEmpty()) {
