@@ -78,7 +78,7 @@ public class AusleiheService {
         }
         // Aktuelle Ausleihen werden präpariert, Fernleihen entfernt
         List<Ausleihe> vollgefilterteAusleihen = sichereAusleihen.stream()
-                .filter(a -> a.getRueckgabedatum() == null && buch.isAvailable() && !buch.isRentingStatus())
+                .filter(a -> a.getRueckgabedatum() == null)
                 .toList();
         if (vollgefilterteAusleihen.isEmpty()) {
             // Nutzer hat das Buch reserviert → darf ausleihen
