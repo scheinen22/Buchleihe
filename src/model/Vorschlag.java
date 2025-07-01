@@ -64,4 +64,12 @@ public class Vorschlag {
     public void setBuchTitel(String buchTitel) {
         this.buchTitel = buchTitel;
     }
+
+    public String toString() {
+        return "\n----------------------" + "\nTitel: " + getBuchTitel() + "\nAutor: " + getAutor() +
+                "\nVorschlagsnummer: " + id +
+                "\nVorgeschlagen von Nutzer ID: " + getNutzer().getCustomerId() +
+                "\nStatus: " + getStatus() +
+                "\n----------------------";
+    }
 }

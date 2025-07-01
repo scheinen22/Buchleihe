@@ -95,7 +95,7 @@ public class VorschlagDAO implements GenericDAO<Vorschlag> {
 
     @Override
     public List<Vorschlag> getAll() {
-        String sql = "SELECT * FROM Vorschlag";
+        String sql = "SELECT * FROM Vorschlag WHERE status = 'OFFEN'";
         List<Vorschlag> list = new ArrayList<>();
         try (Connection con = DBConnect.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql);
