@@ -86,8 +86,8 @@ public class VorschlagService {
      * @param vorschlag Der akzeptierte Vorschlag.
      */
     private void buchAnlegen(Vorschlag vorschlag) {
-        Buch buch = new Buch(vorschlag.getBuchTitel(), vorschlag.getAutor(), -1, false, false,
-                 true, vorschlag.getNutzer());
+        Buch buch = new Buch(vorschlag.getBuchTitel(), vorschlag.getAutor(), -1, true, false,
+                 false, vorschlag.getNutzer());
         buchDAO.save(buch);
     }
 

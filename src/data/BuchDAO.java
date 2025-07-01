@@ -34,18 +34,23 @@ public class BuchDAO implements GenericDAO<Buch> {
     @Override
     public void save(@NotNull Buch buch) {
         Objects.requireNonNull(buch, BUCH_NICHT_NULL);
-        try (Connection con = DBConnect.getConnection()) {
-            String sql = "INSERT INTO Buch (titel, author, bookId, available, rentingStatus, fernleihe, reserviertVonNutzer) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = con.prepareStatement(sql)) { // Bietet mehr Sicherheit, leichter zu verstehen
-                stmt.setString(1, buch.getTitel());
-                stmt.setString(2, buch.getAuthor());
-                stmt.setInt(3, buch.getBookId());
-                stmt.setBoolean(4, buch.isAvailable());
-                stmt.setBoolean(5, buch.isRentingStatus());
-                stmt.setBoolean(6, buch.isFernleihe());
-                stmt.setInt(7, buch.getReserviertVonNutzer().getCustomerId());
-                stmt.executeUpdate();
+        String sql = "INSERT INTO Buch (titel, author, available, rentingStatus, fernleihe, reserviertVonNutzer) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection con = DBConnect.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, buch.getTitel());
+            stmt.setString(2, buch.getAuthor());
+            stmt.setBoolean(3, buch.isAvailable());
+            stmt.setBoolean(4, buch.isRentingStatus());
+            stmt.setBoolean(5, buch.isFernleihe());
+            stmt.setInt(6, buch.getReserviertVonNutzer().getCustomerId());
+            stmt.executeUpdate();
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    buch.setBookId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("ID konnte nicht generiert werden.");
+                }
             }
         } catch (SQLException e) {
             throw new SQLAbfrageFehlgeschlagenException(e);
