@@ -88,6 +88,7 @@ public class Buch {
     @Override
     public String toString() {
         return "\n----------------------" + "\nTitel: " + getTitel() + "\nAutor: " + getAuthor() +
+                "\nISBN: " + bookId +
                 "\nVerfügbarkeit im Lager: " + (available ? "✅" : "❌") + "\nAusgeliehen: " + (rentingStatus ? "✅" : "❌") +
                 "\nZur Fernleihe verfügbar: " + (fernleihe ? "✅" : "❌") + "\n----------------------";
     }
