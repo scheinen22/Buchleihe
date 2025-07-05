@@ -1,18 +1,18 @@
-package service;
+package server.service;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
-import data.AusleiheDAO;
-import data.BuchDAO;
-import data.VormerkerlisteDAO;
-import exception.CheckedException;
-import model.Ausleihe;
-import model.Buch;
-import model.Nutzer;
-import model.Vormerkerliste;
-import view.View;
+import client.exception.CheckedException;
+import client.model.Ausleihe;
+import client.model.Buch;
+import client.model.Nutzer;
+import client.model.Vormerkerliste;
+import server.data.AusleiheDAO;
+import server.data.BuchDAO;
+import server.data.VormerkerlisteDAO;
+import client.view.View;
 
 /**
  * Der AusleiheService enthält die gesamte Geschäftslogik für Prozesse rund um die Ausleihe,

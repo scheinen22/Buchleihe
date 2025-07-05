@@ -1,4 +1,4 @@
-package exception;
+package client.exception;
 
 /**
  * Eigene Checked Exception. Wird an Stellen geworfen, in denen mit einem Fehler durch den Nutzerinput

@@ -1,12 +1,12 @@
-package service;
+package server.service;
 
-import data.BuchDAO;
-import data.VorschlagDAO;
-import exception.CheckedException;
-import model.Buch;
-import model.Nutzer;
-import model.Vorschlag;
-import model.VorschlagsStatus;
+import client.exception.CheckedException;
+import client.model.Buch;
+import client.model.Nutzer;
+import client.model.Vorschlag;
+import client.model.VorschlagsStatus;
+import server.data.BuchDAO;
+import server.data.VorschlagDAO;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
-package service;
+package server.service;
 
-import data.NutzerDAO;
-import exception.CheckedException;
-import model.Nutzer;
-import view.View;
+import client.exception.CheckedException;
+import client.model.Nutzer;
+import server.data.NutzerDAO;
+import client.view.View;
 
 import java.util.List;
 

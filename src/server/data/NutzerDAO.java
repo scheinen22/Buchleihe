@@ -1,4 +1,4 @@
-package data;
+package server.data;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,8 +11,8 @@ import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import exception.SQLAbfrageFehlgeschlagenException;
-import model.Nutzer;
+import client.exception.SQLAbfrageFehlgeschlagenException;
+import client.model.Nutzer;
 
 @SuppressWarnings("java:S6548")
 public class NutzerDAO implements GenericDAO<Nutzer> {

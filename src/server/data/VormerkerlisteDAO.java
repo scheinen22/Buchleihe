@@ -1,9 +1,9 @@
-package data;
+package server.data;
 
-import exception.SQLAbfrageFehlgeschlagenException;
-import model.Buch;
-import model.Nutzer;
-import model.Vormerkerliste;
+import client.exception.SQLAbfrageFehlgeschlagenException;
+import client.model.Buch;
+import client.model.Nutzer;
+import client.model.Vormerkerliste;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

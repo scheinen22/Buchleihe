@@ -1,19 +1,19 @@
-package controller;
+package client.controller;
 
-import data.AusleiheDAO;
-import data.BuchDAO;
-import data.NutzerDAO;
-import data.VormerkerlisteDAO;
-import data.VorschlagDAO;
-import exception.CheckedException;
-import model.Buch;
-import model.Nutzer;
-import model.Vorschlag;
-import model.VorschlagsStatus;
-import service.AusleiheService;
-import service.NutzerService;
-import service.VorschlagService;
-import view.View;
+import client.exception.CheckedException;
+import client.model.Buch;
+import client.model.Nutzer;
+import client.model.Vorschlag;
+import client.model.VorschlagsStatus;
+import client.view.View;
+import server.data.AusleiheDAO;
+import server.data.BuchDAO;
+import server.data.NutzerDAO;
+import server.data.VormerkerlisteDAO;
+import server.data.VorschlagDAO;
+import server.service.AusleiheService;
+import server.service.NutzerService;
+import server.service.VorschlagService;
 
 import java.util.List;
 
