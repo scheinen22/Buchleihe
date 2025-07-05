@@ -2,7 +2,6 @@ package client.interfaces;
 
 import client.exception.CheckedException;
 import client.model.Nutzer;
-import client.view.View;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

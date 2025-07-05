@@ -75,7 +75,7 @@ public class Controller {
             switch (auswahl) {
                 case 1 -> katalogAnzeigen(ausleiheService);
                 case 2 -> buchSuchen(ausleiheService); // -> Infos abfragen, dann für die Logik und Zugriff auf die DAOs in die Services leiten
-                case 3 -> ausleihen(nutzer,  ausleiheService);
+                case 3 -> ausleihen(nutzer, ausleiheService);
                 case 4 -> buchZurueckgeben(nutzer, ausleiheService);
                 case 5 -> buchVorschlagen(nutzer, vorschlagService);
                 case 6 -> profilAnzeigen(nutzer, nutzerService);
@@ -129,7 +129,7 @@ public class Controller {
         View.pauseBisEnter();
     }
 
-    private void profilAnzeigen(Nutzer nutzer,  INutzerService nutzerService) throws RemoteException {
+    private void profilAnzeigen(Nutzer nutzer, INutzerService nutzerService) throws RemoteException {
         View.ausgabe("\nIhr Profil: ");
         nutzerService.profilAnzeigen(nutzer);
         View.pauseBisEnter();
