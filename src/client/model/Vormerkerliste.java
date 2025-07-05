@@ -1,8 +1,9 @@
 package client.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Vormerkerliste {
+public class Vormerkerliste implements Serializable {
 
     private Nutzer nutzer;
     private Buch buch;

@@ -1,6 +1,8 @@
 package client.model;
 
-public class Vorschlag {
+import java.io.Serializable;
+
+public class Vorschlag implements Serializable {
     private int id;
     private String buchTitel;
     private String autor;

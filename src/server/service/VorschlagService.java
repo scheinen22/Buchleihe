@@ -1,6 +1,7 @@
 package server.service;
 
 import client.exception.CheckedException;
+import client.interfaces.IVorschlagService;
 import client.model.Buch;
 import client.model.Nutzer;
 import client.model.Vorschlag;
@@ -8,13 +9,15 @@ import client.model.VorschlagsStatus;
 import server.data.BuchDAO;
 import server.data.VorschlagDAO;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 /**
  * Vorschlagservice enthält die Businesslogik für die Vorschläge.
  * In dieser Klasse wird mit den besorgten Objekten aus der Datenbank hantiert.
  */
-public class VorschlagService {
+public class VorschlagService extends UnicastRemoteObject implements IVorschlagService {
 
     private final VorschlagDAO vorschlagDAO;
     private final BuchDAO buchDAO;
@@ -25,7 +28,7 @@ public class VorschlagService {
      * @param vorschlagDAO Das DAO für den Zugriff auf Vorschlags-Daten.
      * @param buchDAO      Das DAO für den Zugriff auf Buch-Daten, benötigt beim Akzeptieren eines Vorschlags.
      */
-    public VorschlagService(VorschlagDAO vorschlagDAO,  BuchDAO buchDAO) {
+    public VorschlagService(VorschlagDAO vorschlagDAO,  BuchDAO buchDAO) throws RemoteException {
         this.vorschlagDAO = vorschlagDAO;
         this.buchDAO = buchDAO;
     }

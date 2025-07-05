@@ -1,6 +1,8 @@
 package client.model;
 
-public class Buch {
+import java.io.Serializable;
+
+public class Buch implements Serializable {
 
     private String titel;
     private String author;
