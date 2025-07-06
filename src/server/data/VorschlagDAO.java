@@ -1,4 +1,4 @@
-package data;
+package server.data;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,10 +12,10 @@ import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import exception.SQLAbfrageFehlgeschlagenException;
-import model.Nutzer;
-import model.Vorschlag;
-import model.VorschlagsStatus;
+import client.exception.SQLAbfrageFehlgeschlagenException;
+import client.model.Nutzer;
+import client.model.Vorschlag;
+import client.model.VorschlagsStatus;
 
 @SuppressWarnings("java:S6548")
 public class VorschlagDAO implements GenericDAO<Vorschlag> {

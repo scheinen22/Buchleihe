@@ -1,20 +1,19 @@
-package controller;
+package client.controller;
 
-import data.AusleiheDAO;
-import data.BuchDAO;
-import data.NutzerDAO;
-import data.VormerkerlisteDAO;
-import data.VorschlagDAO;
-import exception.CheckedException;
-import model.Buch;
-import model.Nutzer;
-import model.Vorschlag;
-import model.VorschlagsStatus;
-import service.AusleiheService;
-import service.NutzerService;
-import service.VorschlagService;
-import view.View;
+import client.exception.CheckedException;
+import client.interfaces.IAusleiheService;
+import client.interfaces.INutzerService;
+import client.interfaces.IVorschlagService;
+import client.model.Buch;
+import client.model.Nutzer;
+import client.model.Vorschlag;
+import client.model.VorschlagsStatus;
+import client.view.View;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.List;
 
 /**
@@ -22,32 +21,38 @@ import java.util.List;
  */
 public class Controller {
 
-    private final AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance(), VormerkerlisteDAO.getInstance(), AusleiheDAO.getInstance());
-    private final NutzerService nutzerService = new NutzerService(NutzerDAO.getInstance());
-    private final VorschlagService vorschlagsService = new VorschlagService(VorschlagDAO.getInstance(), BuchDAO.getInstance());
     private static final String UNGUELTIG_EINGABE = "⚠️ Ungültige Eingabe. Bitte erneut versuchen.";
     private static final String TRENNLINIE = "------------------------";
     private static final String WAEHLE_OPTION = "Bitte wählen Sie eine Option:";
+
 
     public static void main(String[] args) {
         new Controller().start();
     }
 
     public void start() {
-        View.ausgabe("\n--------------------------------------------");
-        View.ausgabe("Willkommen im Bibliotheksmanagement-System");
-        View.ausgabe("--------------------------------------------");
+        try {
+            final IAusleiheService ausleiheService = (IAusleiheService) Naming.lookup("rmi://localhost/AusleiheService");
+            final INutzerService nutzerService = (INutzerService) Naming.lookup("rmi://localhost/NutzerService");
+            final IVorschlagService vorschlagsService = (IVorschlagService) Naming.lookup("rmi://localhost/VorschlagService");
+            View.ausgabe("\n--------------------------------------------");
+            View.ausgabe("Willkommen im Bibliotheksmanagement-System");
+            View.ausgabe("--------------------------------------------");
 
-        pause(500);
-        ladeAnimation();
-        pause(250);
+            pause(500);
+            ladeAnimation();
+            pause(250);
 
-        Nutzer nutzer = login();
-        pruefeBenachrichtigungen(nutzer);
-        zeigeHauptmenue(nutzer);
+            Nutzer nutzer = login(nutzerService);
+            pruefeBenachrichtigungen(nutzer, vorschlagsService);
+            zeigeHauptmenue(nutzer, vorschlagsService, nutzerService, ausleiheService);
+        } catch (NotBoundException | MalformedURLException | RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void zeigeHauptmenue(Nutzer nutzer) {
+    private void zeigeHauptmenue(Nutzer nutzer, IVorschlagService vorschlagService, INutzerService nutzerService,
+                                 IAusleiheService ausleiheService) throws RemoteException {
         while (true) {
             pause(1500);
             View.ausgabe("\n📚 Hauptmenü");
@@ -68,23 +73,21 @@ public class Controller {
             int auswahl = View.eingabeInt();
 
             switch (auswahl) {
-                case 1 -> katalogAnzeigen();
-                case 2 -> buchSuchen(); // -> Infos abfragen, dann für die Logik und Zugriff auf die DAOs in die Services leiten
-                case 3 -> ausleihen(nutzer);
-                case 4 -> buchZurueckgeben(nutzer);
-                case 5 -> buchVorschlagen(nutzer);
-                case 6 -> profilAnzeigen(nutzer);
+                case 1 -> katalogAnzeigen(ausleiheService);
+                case 2 -> buchSuchen(ausleiheService); // -> Infos abfragen, dann für die Logik und Zugriff auf die DAOs in die Services leiten
+                case 3 -> ausleihen(nutzer, ausleiheService);
+                case 4 -> buchZurueckgeben(nutzer, ausleiheService);
+                case 5 -> buchVorschlagen(nutzer, vorschlagService);
+                case 6 -> profilAnzeigen(nutzer, nutzerService);
                 case 7 -> {
                     if (nutzer.isMitarbeiter()) {
-                        vorschlaegeVerwalten();
-                    }
-                    else View.ausgabe(UNGUELTIG_EINGABE);
+                        vorschlaegeVerwalten(vorschlagService);
+                    } else View.ausgabe(UNGUELTIG_EINGABE);
                 }
                 case 8 -> {
                     if (nutzer.isMitarbeiter()) {
-                        nutzerVerwalten();
-                    }
-                    else View.ausgabe(UNGUELTIG_EINGABE);
+                        nutzerVerwalten(nutzerService);
+                    } else View.ausgabe(UNGUELTIG_EINGABE);
                 }
                 case 0 -> {
                     View.ausgabe("\n👋 Sie wurden abgemeldet.");
@@ -102,7 +105,7 @@ public class Controller {
         }
     }
 
-    private void katalogAnzeigen() {
+    private void katalogAnzeigen(IAusleiheService ausleiheService) throws RemoteException {
         View.ausgabe("\n📚 Buchkatalog");
         pause(500);
         List<Buch> alleBuecher = ausleiheService.holeAlleBuecher();
@@ -112,7 +115,7 @@ public class Controller {
         View.pauseBisEnter();
     }
 
-    private void buchVorschlagen(Nutzer nutzer) {
+    private void buchVorschlagen(Nutzer nutzer, IVorschlagService vorschlagsService) throws RemoteException {
         View.ausgabe("\n📚 Buchvorschlag für Neubeschaffung");
         pause(500);
         String titel = View.eingabe("Buchtitel: ");
@@ -126,13 +129,13 @@ public class Controller {
         View.pauseBisEnter();
     }
 
-    private void profilAnzeigen(Nutzer nutzer) {
+    private void profilAnzeigen(Nutzer nutzer, INutzerService nutzerService) throws RemoteException {
         View.ausgabe("\nIhr Profil: ");
         nutzerService.profilAnzeigen(nutzer);
         View.pauseBisEnter();
     }
 
-    private void vorschlaegeVerwalten() {
+    private void vorschlaegeVerwalten(IVorschlagService vorschlagsService) throws RemoteException {
         boolean zustand = true;
         while (zustand) {
             pause(250);
@@ -191,7 +194,7 @@ public class Controller {
         }
     }
 
-    private void nutzerVerwalten() {
+    private void nutzerVerwalten(INutzerService nutzerService) throws RemoteException {
         boolean zustand = true;
         while (zustand) {
             pause(250);
@@ -236,7 +239,7 @@ public class Controller {
         }
     }
 
-    private void buchZurueckgeben(Nutzer nutzer) {
+    private void buchZurueckgeben(Nutzer nutzer, IAusleiheService ausleiheService) throws RemoteException {
         View.ausgabe("📖 Buchrückgabe");
         pause(1000);
         View.ausgabe("\nBitte geben Sie die ISBN des Buchs ein: ");
@@ -249,7 +252,7 @@ public class Controller {
         }
     }
 
-    private void ausleihen(Nutzer nutzer) {
+    private void ausleihen(Nutzer nutzer, IAusleiheService ausleiheService) throws RemoteException {
         View.ausgabe("📖 Buchausleihe");
         pause(1000);
         View.ausgabe("Bitte geben Sie die ISBN des Buchs ein: ");
@@ -262,7 +265,7 @@ public class Controller {
         }
     }
 
-    private Nutzer login() {
+    private Nutzer login(INutzerService nutzerService) throws RemoteException {
         while (true) {
             View.ausgabe("\n🔐 Anmeldung erforderlich");
             String benutzername = View.eingabe("Benutzername: ").trim();
@@ -281,7 +284,7 @@ public class Controller {
         }
     }
 
-    private void buchSuchen() {
+    private void buchSuchen(IAusleiheService ausleiheService) throws RemoteException {
         View.ausgabe("\n📖 Buchsuche");
         pause(500);
         View.ausgabe("Bitte geben Sie die ISBN des Buchs ein:");
@@ -289,14 +292,14 @@ public class Controller {
         try {
             Buch buch = ausleiheService.sucheBuch(isbn);
             pause(500);
-            View.ausgabe(buch.toString()); // Schöne toString() bauen am Ende!!!
+            View.ausgabe(buch.toString());
         } catch (CheckedException e) {
             View.ausgabe(e.getMessage());
         }
         View.pauseBisEnter();
     }
 
-    public void pruefeBenachrichtigungen(Nutzer nutzer) {
+    public void pruefeBenachrichtigungen(Nutzer nutzer, IVorschlagService vorschlagsService) throws RemoteException {
         List<Vorschlag> benachrichtigungen = vorschlagsService.nichtBenachrichtigteNutzer(nutzer);
         for (Vorschlag v : benachrichtigungen) {
             if (!v.isBenachrichtigt()) {

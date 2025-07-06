@@ -1,4 +1,4 @@
-package data;
+package server.data;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import model.Nutzer;
+import client.model.Nutzer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import exception.SQLAbfrageFehlgeschlagenException;
-import model.Buch;
+import client.exception.SQLAbfrageFehlgeschlagenException;
+import client.model.Buch;
 
 /**
  * Die Klasse enthält alle nötigen SQL Operationen, um an

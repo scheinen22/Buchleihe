@@ -1,17 +1,21 @@
-package service;
+package server.service;
 
-import data.NutzerDAO;
-import exception.CheckedException;
-import model.Nutzer;
-import view.View;
+import client.exception.CheckedException;
+import client.interfaces.IAusleiheService;
+import client.interfaces.INutzerService;
+import client.model.Nutzer;
+import server.data.NutzerDAO;
+import client.view.View;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 /**
  * Nutzerservice enthält die Businesslogik für die Nutzer.
  * In dieser Klasse wird mit den besorgten Objekten aus der Datenbank hantiert.
  */
-public class NutzerService {
+public class NutzerService extends UnicastRemoteObject implements INutzerService {
 
     private final NutzerDAO nutzerDAO;
 
@@ -20,7 +24,7 @@ public class NutzerService {
      *
      * @param nutzerDAO Das DAO für den Zugriff auf Nutzer-Daten.
      */
-    public NutzerService(NutzerDAO nutzerDAO) {
+    public NutzerService(NutzerDAO nutzerDAO) throws RemoteException {
         this.nutzerDAO = nutzerDAO;
     }
 

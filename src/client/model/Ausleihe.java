@@ -1,8 +1,9 @@
-package model;
+package client.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Ausleihe {
+public class Ausleihe implements Serializable {
 
     private int id;
     private Buch buch;

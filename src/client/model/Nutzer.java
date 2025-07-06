@@ -1,6 +1,8 @@
-package model;
+package client.model;
 
-public class Nutzer {
+import java.io.Serializable;
+
+public class Nutzer implements Serializable {
 
     private String name;
     private String surname;
