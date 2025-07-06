@@ -35,11 +35,4 @@ public interface INutzerService extends Remote {
      * @throws CheckedException wenn der Nutzer nicht existiert.
      */
     void nutzerLoeschen(int id) throws RemoteException, CheckedException;
-
-    /**
-     * Gibt die Profildaten eines Nutzers auf der Konsole aus.
-     *
-     * @param nutzer Der Nutzer, dessen Profil angezeigt werden soll.
-     */
-    void profilAnzeigen(Nutzer nutzer) throws RemoteException;
 }

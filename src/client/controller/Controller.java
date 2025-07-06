@@ -25,6 +25,9 @@ public class Controller {
     private static final String TRENNLINIE = "------------------------";
     private static final String WAEHLE_OPTION = "Bitte wählen Sie eine Option:";
 
+    private IAusleiheService ausleiheService;
+    private INutzerService nutzerService;
+    private IVorschlagService vorschlagsService;
 
     public static void main(String[] args) {
         new Controller().start();
@@ -32,9 +35,10 @@ public class Controller {
 
     public void start() {
         try {
-            final IAusleiheService ausleiheService = (IAusleiheService) Naming.lookup("rmi://localhost/AusleiheService");
-            final INutzerService nutzerService = (INutzerService) Naming.lookup("rmi://localhost/NutzerService");
-            final IVorschlagService vorschlagsService = (IVorschlagService) Naming.lookup("rmi://localhost/VorschlagService");
+            this.ausleiheService = (IAusleiheService) Naming.lookup("rmi://localhost/AusleiheService");
+            this.nutzerService = (INutzerService) Naming.lookup("rmi://localhost/NutzerService");
+            this.vorschlagsService = (IVorschlagService) Naming.lookup("rmi://localhost/VorschlagService");
+
             View.ausgabe("\n--------------------------------------------");
             View.ausgabe("Willkommen im Bibliotheksmanagement-System");
             View.ausgabe("--------------------------------------------");
@@ -43,16 +47,15 @@ public class Controller {
             ladeAnimation();
             pause(250);
 
-            Nutzer nutzer = login(nutzerService);
-            pruefeBenachrichtigungen(nutzer, vorschlagsService);
-            zeigeHauptmenue(nutzer, vorschlagsService, nutzerService, ausleiheService);
+            Nutzer nutzer = login();
+            pruefeBenachrichtigungen(nutzer);
+            zeigeHauptmenue(nutzer);
         } catch (NotBoundException | MalformedURLException | RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    private void zeigeHauptmenue(Nutzer nutzer, IVorschlagService vorschlagService, INutzerService nutzerService,
-                                 IAusleiheService ausleiheService) throws RemoteException {
+    private void zeigeHauptmenue(Nutzer nutzer) throws RemoteException {
         while (true) {
             pause(1500);
             View.ausgabe("\n📚 Hauptmenü");
@@ -73,20 +76,20 @@ public class Controller {
             int auswahl = View.eingabeInt();
 
             switch (auswahl) {
-                case 1 -> katalogAnzeigen(ausleiheService);
-                case 2 -> buchSuchen(ausleiheService); // -> Infos abfragen, dann für die Logik und Zugriff auf die DAOs in die Services leiten
-                case 3 -> ausleihen(nutzer, ausleiheService);
-                case 4 -> buchZurueckgeben(nutzer, ausleiheService);
-                case 5 -> buchVorschlagen(nutzer, vorschlagService);
-                case 6 -> profilAnzeigen(nutzer, nutzerService);
+                case 1 -> katalogAnzeigen();
+                case 2 -> buchSuchen(); // -> Infos abfragen, dann für die Logik und Zugriff auf die DAOs in die Services leiten
+                case 3 -> ausleihen(nutzer);
+                case 4 -> buchZurueckgeben(nutzer);
+                case 5 -> buchVorschlagen(nutzer);
+                case 6 -> profilAnzeigen(nutzer);
                 case 7 -> {
                     if (nutzer.isMitarbeiter()) {
-                        vorschlaegeVerwalten(vorschlagService);
+                        vorschlaegeVerwalten();
                     } else View.ausgabe(UNGUELTIG_EINGABE);
                 }
                 case 8 -> {
                     if (nutzer.isMitarbeiter()) {
-                        nutzerVerwalten(nutzerService);
+                        nutzerVerwalten();
                     } else View.ausgabe(UNGUELTIG_EINGABE);
                 }
                 case 0 -> {
@@ -105,7 +108,7 @@ public class Controller {
         }
     }
 
-    private void katalogAnzeigen(IAusleiheService ausleiheService) throws RemoteException {
+    private void katalogAnzeigen() throws RemoteException {
         View.ausgabe("\n📚 Buchkatalog");
         pause(500);
         List<Buch> alleBuecher = ausleiheService.holeAlleBuecher();
@@ -115,7 +118,7 @@ public class Controller {
         View.pauseBisEnter();
     }
 
-    private void buchVorschlagen(Nutzer nutzer, IVorschlagService vorschlagsService) throws RemoteException {
+    private void buchVorschlagen(Nutzer nutzer) throws RemoteException {
         View.ausgabe("\n📚 Buchvorschlag für Neubeschaffung");
         pause(500);
         String titel = View.eingabe("Buchtitel: ");
@@ -129,13 +132,13 @@ public class Controller {
         View.pauseBisEnter();
     }
 
-    private void profilAnzeigen(Nutzer nutzer, INutzerService nutzerService) throws RemoteException {
+    private void profilAnzeigen(Nutzer nutzer) {
         View.ausgabe("\nIhr Profil: ");
-        nutzerService.profilAnzeigen(nutzer);
+        View.ausgabe(nutzer.toString());
         View.pauseBisEnter();
     }
 
-    private void vorschlaegeVerwalten(IVorschlagService vorschlagsService) throws RemoteException {
+    private void vorschlaegeVerwalten() throws RemoteException {
         boolean zustand = true;
         while (zustand) {
             pause(250);
@@ -194,7 +197,7 @@ public class Controller {
         }
     }
 
-    private void nutzerVerwalten(INutzerService nutzerService) throws RemoteException {
+    private void nutzerVerwalten() throws RemoteException {
         boolean zustand = true;
         while (zustand) {
             pause(250);
@@ -239,7 +242,7 @@ public class Controller {
         }
     }
 
-    private void buchZurueckgeben(Nutzer nutzer, IAusleiheService ausleiheService) throws RemoteException {
+    private void buchZurueckgeben(Nutzer nutzer) throws RemoteException {
         View.ausgabe("📖 Buchrückgabe");
         pause(1000);
         View.ausgabe("\nBitte geben Sie die ISBN des Buchs ein: ");
@@ -252,7 +255,7 @@ public class Controller {
         }
     }
 
-    private void ausleihen(Nutzer nutzer, IAusleiheService ausleiheService) throws RemoteException {
+    private void ausleihen(Nutzer nutzer) throws RemoteException {
         View.ausgabe("📖 Buchausleihe");
         pause(1000);
         View.ausgabe("Bitte geben Sie die ISBN des Buchs ein: ");
@@ -265,7 +268,7 @@ public class Controller {
         }
     }
 
-    private Nutzer login(INutzerService nutzerService) throws RemoteException {
+    private Nutzer login() throws RemoteException {
         while (true) {
             View.ausgabe("\n🔐 Anmeldung erforderlich");
             String benutzername = View.eingabe("Benutzername: ").trim();
@@ -284,7 +287,7 @@ public class Controller {
         }
     }
 
-    private void buchSuchen(IAusleiheService ausleiheService) throws RemoteException {
+    private void buchSuchen() throws RemoteException {
         View.ausgabe("\n📖 Buchsuche");
         pause(500);
         View.ausgabe("Bitte geben Sie die ISBN des Buchs ein:");
@@ -299,7 +302,7 @@ public class Controller {
         View.pauseBisEnter();
     }
 
-    public void pruefeBenachrichtigungen(Nutzer nutzer, IVorschlagService vorschlagsService) throws RemoteException {
+    public void pruefeBenachrichtigungen(Nutzer nutzer) throws RemoteException {
         List<Vorschlag> benachrichtigungen = vorschlagsService.nichtBenachrichtigteNutzer(nutzer);
         for (Vorschlag v : benachrichtigungen) {
             if (!v.isBenachrichtigt()) {

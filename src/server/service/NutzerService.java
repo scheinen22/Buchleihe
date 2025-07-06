@@ -64,13 +64,4 @@ public class NutzerService extends UnicastRemoteObject implements INutzerService
             throw new CheckedException("Nutzer existiert nicht.");
         }
     }
-
-    /**
-     * Gibt die Profildaten eines Nutzers auf der Konsole aus.
-     *
-     * @param nutzer Der Nutzer, dessen Profil angezeigt werden soll.
-     */
-    public void profilAnzeigen(Nutzer nutzer) {
-        View.ausgabe(nutzer.toString());
-    }
 }
