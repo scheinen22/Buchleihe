@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import client.exception.CheckedException;
-import client.interfaces.IAusleiheService;
 import client.model.Ausleihe;
 import client.model.Buch;
 import client.model.Nutzer;
@@ -22,7 +21,7 @@ import client.view.View;
  * Rückgabe und Suche von Büchern. Er koordiniert die Interaktionen zwischen den zugehörigen DAOs
  * sowie dem Controller.
  */
-public class AusleiheService extends UnicastRemoteObject implements IAusleiheService {
+public class AusleiheServiceImpl extends UnicastRemoteObject implements client.interfaces.AusleiheService {
 
     private final BuchDAO buchDAO;
     private final VormerkerlisteDAO vormerkerlisteDAO;
@@ -35,7 +34,7 @@ public class AusleiheService extends UnicastRemoteObject implements IAusleiheSer
      * @param vormerkerlisteDAO Das DAO für den Zugriff auf die Vormerkerliste.
      * @param ausleiheDAO       Das DAO für den Zugriff auf Ausleih-Daten.
      */
-    public AusleiheService(BuchDAO buchDAO, VormerkerlisteDAO vormerkerlisteDAO, AusleiheDAO ausleiheDAO) throws RemoteException {
+    public AusleiheServiceImpl(BuchDAO buchDAO, VormerkerlisteDAO vormerkerlisteDAO, AusleiheDAO ausleiheDAO) throws RemoteException {
         this.buchDAO = buchDAO;
         this.vormerkerlisteDAO = vormerkerlisteDAO;
         this.ausleiheDAO = ausleiheDAO;

@@ -7,9 +7,9 @@ import server.data.BuchDAO;
 import server.data.NutzerDAO;
 import server.data.VormerkerlisteDAO;
 import server.data.VorschlagDAO;
-import server.service.AusleiheService;
-import server.service.NutzerService;
-import server.service.VorschlagService;
+import server.service.AusleiheServiceImpl;
+import server.service.NutzerServiceImpl;
+import server.service.VorschlagServiceImpl;
 
 public class Server {
     public static void main(String[] args) {
@@ -17,9 +17,9 @@ public class Server {
             LocateRegistry.createRegistry(1099);
             System.out.println("RMI Registry gestartet.");
 
-            AusleiheService ausleiheService = new AusleiheService(BuchDAO.getInstance(), VormerkerlisteDAO.getInstance(), AusleiheDAO.getInstance());
-            NutzerService nutzerService = new NutzerService(NutzerDAO.getInstance());
-            VorschlagService vorschlagService = new VorschlagService(VorschlagDAO.getInstance(), BuchDAO.getInstance());
+            AusleiheServiceImpl ausleiheService = new AusleiheServiceImpl(BuchDAO.getInstance(), VormerkerlisteDAO.getInstance(), AusleiheDAO.getInstance());
+            NutzerServiceImpl nutzerService = new NutzerServiceImpl(NutzerDAO.getInstance());
+            VorschlagServiceImpl vorschlagService = new VorschlagServiceImpl(VorschlagDAO.getInstance(), BuchDAO.getInstance());
             System.out.println("Service-Objekte erstellt.");
 
             Naming.bind("rmi://localhost/AusleiheService", ausleiheService);

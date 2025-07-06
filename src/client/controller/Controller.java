@@ -1,9 +1,9 @@
 package client.controller;
 
 import client.exception.CheckedException;
-import client.interfaces.IAusleiheService;
-import client.interfaces.INutzerService;
-import client.interfaces.IVorschlagService;
+import client.interfaces.AusleiheService;
+import client.interfaces.NutzerService;
+import client.interfaces.VorschlagService;
 import client.model.Buch;
 import client.model.Nutzer;
 import client.model.Vorschlag;
@@ -25,9 +25,9 @@ public class Controller {
     private static final String TRENNLINIE = "------------------------";
     private static final String WAEHLE_OPTION = "Bitte wählen Sie eine Option:";
 
-    private IAusleiheService ausleiheService;
-    private INutzerService nutzerService;
-    private IVorschlagService vorschlagsService;
+    private AusleiheService ausleiheService;
+    private NutzerService nutzerService;
+    private VorschlagService vorschlagsService;
 
     public static void main(String[] args) {
         new Controller().start();
@@ -35,9 +35,9 @@ public class Controller {
 
     public void start() {
         try {
-            this.ausleiheService = (IAusleiheService) Naming.lookup("rmi://localhost/AusleiheService");
-            this.nutzerService = (INutzerService) Naming.lookup("rmi://localhost/NutzerService");
-            this.vorschlagsService = (IVorschlagService) Naming.lookup("rmi://localhost/VorschlagService");
+            this.ausleiheService = (AusleiheService) Naming.lookup("rmi://localhost/AusleiheService");
+            this.nutzerService = (NutzerService) Naming.lookup("rmi://localhost/NutzerService");
+            this.vorschlagsService = (VorschlagService) Naming.lookup("rmi://localhost/VorschlagService");
 
             View.ausgabe("\n--------------------------------------------");
             View.ausgabe("Willkommen im Bibliotheksmanagement-System");

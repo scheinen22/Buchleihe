@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Remote-Interface für den NutzerService.
  */
-public interface INutzerService extends Remote {
+public interface NutzerService extends Remote {
 
     /**
      * Authentifiziert einen Nutzer anhand von Benutzername und Passwort.

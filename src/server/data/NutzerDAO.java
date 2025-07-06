@@ -11,7 +11,7 @@ import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import client.exception.SQLAbfrageFehlgeschlagenException;
+import server.exception.SQLAbfrageFehlgeschlagenException;
 import client.model.Nutzer;
 
 @SuppressWarnings("java:S6548")

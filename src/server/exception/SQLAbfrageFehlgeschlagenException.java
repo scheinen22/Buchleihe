@@ -1,4 +1,4 @@
-package client.exception;
+package server.exception;
 
 /**
  * Eigene Unchecked Exception. In den Data Acces Objekten werden SQL Exceptions abgefangen

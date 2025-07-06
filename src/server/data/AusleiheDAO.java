@@ -1,6 +1,6 @@
 package server.data;
 
-import client.exception.SQLAbfrageFehlgeschlagenException;
+import server.exception.SQLAbfrageFehlgeschlagenException;
 import client.model.Ausleihe;
 import client.model.Buch;
 import client.model.Nutzer;

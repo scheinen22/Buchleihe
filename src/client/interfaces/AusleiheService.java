@@ -12,7 +12,7 @@ import java.util.List;
  * Remote-Interface für den AusleiheService.
  * Definiert alle Methoden, die vom Client remote aufgerufen werden können.
  */
-public interface IAusleiheService extends Remote {
+public interface AusleiheService extends Remote {
 
     /**
      * Sucht ein Buch anhand seiner ID (ISBN).

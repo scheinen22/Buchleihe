@@ -12,7 +12,7 @@ import client.model.Nutzer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import client.exception.SQLAbfrageFehlgeschlagenException;
+import server.exception.SQLAbfrageFehlgeschlagenException;
 import client.model.Buch;
 
 /**

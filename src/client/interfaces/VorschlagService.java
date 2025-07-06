@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Remote-Interface für den VorschlagService.
  */
-public interface IVorschlagService extends Remote {
+public interface VorschlagService extends Remote {
 
     /**
      * Speichert einen neuen Buchvorschlag.
