@@ -24,6 +24,7 @@ public class Controller {
     private static final String UNGUELTIG_EINGABE = "⚠️ Ungültige Eingabe. Bitte erneut versuchen.";
     private static final String TRENNLINIE = "------------------------";
     private static final String WAEHLE_OPTION = "Bitte wählen Sie eine Option:";
+
     private IAusleiheService ausleiheService;
     private INutzerService nutzerService;
     private IVorschlagService vorschlagsService;
@@ -37,6 +38,7 @@ public class Controller {
             this.ausleiheService = (IAusleiheService) Naming.lookup("rmi://localhost/AusleiheService");
             this.nutzerService = (INutzerService) Naming.lookup("rmi://localhost/NutzerService");
             this.vorschlagsService = (IVorschlagService) Naming.lookup("rmi://localhost/VorschlagService");
+
             View.ausgabe("\n--------------------------------------------");
             View.ausgabe("Willkommen im Bibliotheksmanagement-System");
             View.ausgabe("--------------------------------------------");
