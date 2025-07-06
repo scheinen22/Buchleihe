@@ -11,6 +11,12 @@ import server.service.AusleiheServiceImpl;
 import server.service.NutzerServiceImpl;
 import server.service.VorschlagServiceImpl;
 
+/**
+ * Die Server-Klasse ist der Haupteinstiegspunkt für die Server-Anwendung.
+ * Sie initialisiert die RMI-Registry, instanziiert die Service-Implementierungen
+ * mit den notwendigen DAOs (Dependency Injection) und bindet die Services an
+ * die RMI-Registry, sodass sie für Clients remote erreichbar sind.
+ */
 public class Server {
     public static void main(String[] args) {
         try {

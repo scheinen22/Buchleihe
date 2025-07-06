@@ -5,8 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Unterste Schicht in der Architektur. In der Klasse werden nötige Parameter
- * um eine Connection mit der Datenbank aufzubauen festgelegt.
+ * Stellt die unterste Schicht der Server-Architektur dar. Diese Utility-Klasse
+ * ist verantwortlich für den Aufbau einer Verbindung zur MariaDB-Datenbank.
+ * Die Verbindungsparameter sind hier zentral definiert.
  */
 @SuppressWarnings("java:S2115") // Passwort ist nicht nötig bei der Projektgröße
 public class DBConnect {

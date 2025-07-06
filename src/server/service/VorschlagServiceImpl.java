@@ -14,8 +14,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 /**
- * Vorschlagservice enthält die Businesslogik für die Vorschläge.
- * In dieser Klasse wird mit den besorgten Objekten aus der Datenbank hantiert.
+ * Implementiert das VorschlagService-Interface. Diese Klasse enthält die gesamte Geschäftslogik
+ * für Prozesse rund um die Vorschläge und Benachrichtigungen der Vorschläge. Sie wird auf dem Server ausgeführt,
+ * koordiniert die Interaktionen zwischen den zugehörigen DAOs und wird von Clients remote aufgerufen.
  */
 public class VorschlagServiceImpl extends UnicastRemoteObject implements VorschlagService {
 

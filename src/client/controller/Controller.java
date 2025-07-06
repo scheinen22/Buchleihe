@@ -17,7 +17,9 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- * Der Controller steuert den Programmablauf und enthält den Programmeinstieg.
+ * Der Controller steuert den Programmablauf auf der Client-Seite. Er stellt den Programmeinstiegspunkt dar,
+ * initialisiert die Verbindung zu den RMI-Services auf dem Server und verarbeitet die Benutzereingaben,
+ * indem er die entsprechenden Service-Methoden aufruft.
  */
 public class Controller {
 
@@ -33,6 +35,10 @@ public class Controller {
         new Controller().start();
     }
 
+    /**
+     * Initialisiert die Anwendung, stellt die Verbindung zu den RMI-Services her
+     * und startet die Hauptinteraktionsschleife mit dem Nutzer (Login, Hauptmenü).
+     */
     public void start() {
         try {
             this.ausleiheService = (AusleiheService) Naming.lookup("rmi://localhost/AusleiheService");

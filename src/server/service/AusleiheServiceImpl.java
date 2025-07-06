@@ -17,9 +17,9 @@ import server.data.VormerkerlisteDAO;
 import client.view.View;
 
 /**
- * Der AusleiheService enthält die gesamte Geschäftslogik für Prozesse rund um die Ausleihe,
- * Rückgabe und Suche von Büchern. Er koordiniert die Interaktionen zwischen den zugehörigen DAOs
- * sowie dem Controller.
+ * Implementiert das AusleiheService-Interface. Diese Klasse enthält die gesamte Geschäftslogik
+ * für Prozesse rund um die Ausleihe, Rückgabe und Suche von Büchern. Sie wird auf dem Server ausgeführt,
+ * koordiniert die Interaktionen zwischen den zugehörigen DAOs und wird von Clients remote aufgerufen.
  */
 public class AusleiheServiceImpl extends UnicastRemoteObject implements client.interfaces.AusleiheService {
 

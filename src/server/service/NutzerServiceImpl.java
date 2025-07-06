@@ -11,8 +11,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 /**
- * Nutzerservice enthält die Businesslogik für die Nutzer.
- * In dieser Klasse wird mit den besorgten Objekten aus der Datenbank hantiert.
+ * Implementiert das NutzerService-Interface. Diese Klasse enthält die gesamte Geschäftslogik
+ * für Prozesse rund um das Verwalten von Nutzern und den Login. Sie wird auf dem Server ausgeführt,
+ * koordiniert die Interaktionen zwischen den zugehörigen DAOs und wird von Clients remote aufgerufen.
  */
 public class NutzerServiceImpl extends UnicastRemoteObject implements NutzerService {
 
